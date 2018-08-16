@@ -1,0 +1,77 @@
+//created on: 26 Jul, 2018
+package com.bbdrools
+
+//list any import classes here.
+
+import com.bbdrools.model.Discount;
+import com.bbdrools.model.Product;
+import com.bbdrools.model.ValidDiscount;
+import com.bbdrools.dto.DiscountRequestDTO;
+import com.bbdrools.dto.DiscountResponseDTO;
+
+//declare any global variables here
+
+rule "Validate discounts"
+
+    when
+        //conditions
+        $discount: Discount($dp: discountPrice)
+        $product: Product(mrp - $dp >= cp)
+    then
+        //actions
+        //$discountResponseDTO.setStatus("PASS");
+        insert(new ValidDiscount($discount));
+        //System.out.println("Discount created with details: "+ $discount.getId() 
+        //	+" "+ $discount.getDiscountPrice() +" is valid");
+    	//$discountResponseDTO.addDiscount($discount);	
+    	
+end
+
+rule "Add valid discounts"
+   
+   when
+   		//conditions
+        $discount: Discount();
+        $validDiscount: ValidDiscount(discount == $discount);
+        $discountResponseDTO: DiscountResponseDTO()
+   then
+   		//actions
+        $discountResponseDTO.setStatus("PASS");
+        //System.out.println("Discount created with details: "+ $discount.getId() 
+        //	+" "+ $discount.getDiscountPrice() +" is valid");
+    	$discountResponseDTO.addDiscount($discount);
+    	
+end
+
+rule "Validate discounts__"
+
+    when
+        //conditions
+        //$discount: Discount($dp: discountPrice)
+        //$product: Product(mrp - $dp >= cp)
+        //$discountResponseDTO: DiscountResponseDTO()
+    then
+        //actions
+        //$discountResponseDTO.setStatus("PASS");
+        //System.out.println("Discount created with details: "+ $discount.getId() 
+        //	+" "+ $discount.getDiscountPrice() +" is valid");
+    	//$discountResponseDTO.addDiscount($discount);	
+    	
+end
+
+rule "Discount Rule Request"
+    //include attributes such as "salience" here...
+    when
+        //conditions
+        //$discountRequestDTO: DiscountRequestDTO()
+        //$discountResponseDTO: DiscountResponseDTO()
+    then
+        //actions
+        //System.out.println("DiscountRequestDTO created with details: "
+        //  + $discountRequestDTO.getDiscounts().size());
+    	//$discountResponseDTO.setDiscounts($discountRequestDTO.getDiscounts());
+    	//for(Discount discount : $discountRequestDTO.getDiscounts()) { 
+    		  
+		//}
+
+end

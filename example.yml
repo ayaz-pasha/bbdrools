@@ -1,0 +1,7 @@
+server:
+  type: default
+  maxThreads: 25000
+  maxQueuedRequests: 25000
+
+template: Hello, %s!
+defaultName: Stranger
