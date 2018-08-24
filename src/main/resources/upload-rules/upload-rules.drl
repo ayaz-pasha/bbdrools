@@ -1,0 +1,86 @@
+//created on: 21 Aug, 2018
+package com.bbdrools
+
+//list any import classes here.
+import com.bbdrools.model.ProductDiscount;
+
+//declare any global variables here
+
+rule "Selling Price greater than MRP"
+
+    when
+        //conditions
+        $productDiscount: ProductDiscount(sp > mrp)
+    then
+        //actions
+		$productDiscount.setDiscountError(true);
+		$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Selling Price greater than MRP ~ ");
+end
+
+rule "Selling Price less than zero"
+    //include attributes such as "salience" here...
+    when
+        //conditions
+        $productDiscount: ProductDiscount(sp < 0)
+    then
+        //actions
+		$productDiscount.setDiscountError(true);
+		$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Selling Price less than zero ~ ");
+end
+
+rule "Discounted Value provided by Marketing and Category is higher than the Threshold Margin set for the given SKU"
+    //include attributes such as "salience" here...
+    when
+        //conditions
+        $productDiscount: ProductDiscount(categoryBreakup + marketingBreakup 
+        					> thresholdMargin)
+    then
+        //actions
+		$productDiscount.setDiscountError(true);
+		$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Discounted Value provided by Marketing and Category is higher than the Threshold Margin set for the given SKU ~ ");
+end
+
+rule "Discounted Value provided by Marketing and Category is higher than the MTP"
+    //include attributes such as "salience" here...
+    when
+        //conditions
+        $productDiscount: ProductDiscount(categoryBreakup + marketingBreakup 
+        					> minimumThresholdPrice)
+    then
+        //actions
+		$productDiscount.setDiscountError(true);
+		$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Discounted Value provided by Marketing and Category is higher than the MTP ~ ");
+end
+
+rule "Discounted Selling Price less than the Minimum Threshold Price"
+    //include attributes such as "salience" here...
+    when
+        //conditions
+        $productDiscount: ProductDiscount(sp < minimumThresholdPrice)
+    then
+        //actions
+        $productDiscount.setDiscountError(true);
+        $productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Discounted Selling Price less than the Minimum Threshold Price ~ ");
+end
+
+rule "Redemption Limit per Order should be less than or equal to the Redemption Limit per Member"
+    //include attributes such as "salience" here...
+    when
+        //conditions
+        $productDiscount: ProductDiscount(redemptionOrderLimit > redemptionMemberLimit)
+    then
+        //actions
+		$productDiscount.setDiscountError(true);
+		$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Redemption Limit per Order should be less than or equal to the Redemption Limit per Member ~ ");
+end
+
+rule "Redemption Limit per Campaign should be greater than or equal to the Redemption Limit per Member and the Redemption Limit per Order"
+    //include attributes such as "salience" here...
+    when
+        //conditions
+        $productDiscount: ProductDiscount(redemptionCampaignLimit < redemptionMemberLimit || redemptionCampaignLimit < redemptionOrderLimit)
+    then
+        //actions
+		$productDiscount.setDiscountError(true);
+		$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ " ~ Redemption Limit per Campaign should be greater than or equal to the Redemption Limit per Member and the Redemption Limit per Order ~ ");
+end

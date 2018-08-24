@@ -3,6 +3,7 @@ package com.bbdrools;
 import com.bbdrools.healthcheck.BBDroolsHealthCheck;
 import com.bbdrools.resources.BBDroolsProductResource;
 import com.bbdrools.resources.BBDroolsResource;
+import com.bbdrools.resources.ProductDiscountResource;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -35,12 +36,16 @@ public class BBDroolsApplication extends Application<BBDroolsConfiguration>{
 		final BBDroolsProductResource productResource = new BBDroolsProductResource(
 				configuration.getTemplate());
 		
+		final ProductDiscountResource productDiscountResource = new ProductDiscountResource(
+				configuration.getTemplate());
+		
 		final BBDroolsHealthCheck healthCheck =
 		        new BBDroolsHealthCheck(configuration.getTemplate());
 		    environment.healthChecks().register("template", healthCheck);
 		    
 		environment.jersey().register(resource);
 		environment.jersey().register(productResource);
+		environment.jersey().register(productDiscountResource);
 	}
 
 }

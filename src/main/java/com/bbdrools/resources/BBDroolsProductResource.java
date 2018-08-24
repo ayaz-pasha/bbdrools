@@ -8,7 +8,7 @@ import javax.ws.rs.core.Response;
 
 import com.bbdrools.dto.DiscountRequestDTO;
 import com.bbdrools.dto.DiscountResponseDTO;
-import com.bbdrools.service.BBDroolsProductService;
+import com.bbdrools.service.IBBDroolsProductService;
 import com.bbdrools.service.impl.BBDroolsProductServiceImpl;
 import com.codahale.metrics.annotation.Timed;
 
@@ -26,7 +26,7 @@ public class BBDroolsProductResource {
     @Timed
     @Path("/run-rules")
     public Response runRules(DiscountRequestDTO request) {
-    	BBDroolsProductService service = 
+    	IBBDroolsProductService service = 
 				new BBDroolsProductServiceImpl();
 		
     	DiscountResponseDTO response = 

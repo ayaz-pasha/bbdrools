@@ -2,4 +2,7 @@
     <kbase name="rules" packages="rules">
         <ksession name="ksession-rules"/>
     </kbase>
+    <kbase name="discount-rules" packages="upload-rules">
+        <ksession name="discount-ksession-rules"/>
+    </kbase>
 </kmodule>
