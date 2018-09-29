@@ -2,6 +2,7 @@ package com.bbdrools.service.impl;
 
 import com.bbdrools.model.ProductDiscount;
 import com.bbdrools.service.IDiscountCompute;
+import com.bbdrools.util.JavelinConstants;
 
 public class RegularDiscountCompute implements IDiscountCompute {
 
@@ -9,11 +10,11 @@ public class RegularDiscountCompute implements IDiscountCompute {
 		
 		String discountType = productDiscount.getDiscountType();
 		
-		if(discountType == "percent") {
+		if(discountType.equals(JavelinConstants.FIXED)) {
 			// 
-		} else if(discountType == "rupees") {
+		} else if(discountType.equals(JavelinConstants.FLAT)) {
 			//
-		} else if(discountType == "fixed") {
+		} else if(discountType.equals(JavelinConstants.PERCENT)) {
 			//
 		} else {
 			

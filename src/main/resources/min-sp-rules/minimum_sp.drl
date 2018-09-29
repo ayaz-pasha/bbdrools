@@ -1,0 +1,75 @@
+//created on: 27 Sep, 2018
+package com.bbdrools
+
+//list any import classes here.
+import java.util.List;
+import com.bbdrools.model.Discount;
+import com.bbdrools.model.Product;
+import com.bbdrools.model.BestDiscount;
+
+//declare any global variables here
+global BestDiscount bestDiscount;
+global List<Long> campaigns;
+
+rule "Best SP from all Regular Campaigns"
+    when
+        Discount($highestDiscount : discountPrice, $id: id, $cat: category, $c_id: campaignId, category == "A");
+        not Discount(discountPrice > $highestDiscount, category == "A");
+    then
+        System.out.println("Best discount: "+ $highestDiscount +" ID: "+ $id +" Cat: "+ $cat +" Best: "+ bestDiscount.getDiscountPrice());
+        bestDiscount.setDiscountPrice($highestDiscount);
+        campaigns.add($c_id); 
+        //drools.setFocus("Differential");
+end
+
+rule "Best SP from all Differential Campaigns on top of Regular Campaigns"
+	//agenda-group "Differential"
+    when
+        Discount($highestDiscount : discountPrice, $c_id: campaignId, $id: id, $cat: category, category == "B");
+        not Discount(discountPrice > $highestDiscount, category == "B"); 
+    then
+        System.out.println("Best discount: "+ $highestDiscount +" ID: "+ $id +" Cat: "+ $cat +" Best: "+ bestDiscount.getDiscountPrice());
+        if($highestDiscount > bestDiscount.getDiscountPrice()) {
+        	bestDiscount.setDiscountPrice($highestDiscount);	
+        	campaigns.add($c_id);
+        } 
+        //drools.setFocus("Addon"); 
+end
+
+rule "Apply Addon Campaigns on top of Regular + Differential Campaigns"
+	//agenda-group "Addon"
+	no-loop
+    when
+        $discount: Discount($discountPrice : discountPrice, $c_id: campaignId, $id: id, $cat: category, category == "C"); 
+    then
+        System.out.println("Update Best discount: "+ $discountPrice +" ID: "+ $id +" Cat: "+ $cat +" Best: "+ bestDiscount.getDiscountPrice());
+		modify($discount) {
+			setDiscountPrice(bestDiscount.getDiscountPrice() + ($discountPrice * bestDiscount.getDiscountPrice() / 100));
+		};
+end
+
+rule "Best SP from Addon Campaigns on top of Regular + Differential Campaigns"
+	//agenda-group "Addon"
+    when
+        Discount($highestDiscount : discountPrice, $c_id: campaignId, $id: id, $cat: category, category == "C");
+        not Discount(discountPrice > $highestDiscount, category == "C"); 
+    then
+        System.out.println("Best discount: "+ $highestDiscount +" ID: "+ $id +" Cat: "+ $cat +" Best: "+ bestDiscount.getDiscountPrice());
+        if($highestDiscount > bestDiscount.getDiscountPrice()) {
+        	bestDiscount.setDiscountPrice($highestDiscount);	
+        	campaigns.add($c_id);
+        }
+    
+end
+
+//Item($lowestPrice : price, $id : id)
+//not Item(price > $lowestPrice, id < $id)
+
+//rule "Best SP"
+    //when
+        //$product : Product( $discounts:getDiscounts() && null != $discounts)
+        //accumulate(Discount ($discountPrice : getDiscountPrice(), $id : getId()) from $discounts, 
+                                    //$maxDP: max($discountPrice)) 
+    //then
+        //System.out.println("Best discount: "+ $maxDP); 
+//end

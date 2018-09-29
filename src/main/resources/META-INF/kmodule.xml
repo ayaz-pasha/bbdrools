@@ -5,4 +5,10 @@
     <kbase name="discount-rules" packages="upload-rules">
         <ksession name="discount-ksession-rules"/>
     </kbase>
+    <kbase name="pricing-rules" packages="render-rules">
+        <ksession name="pricing-ksession-rules"/>
+    </kbase>
+    <kbase name="minimim-sp-rules" packages="min-sp-rules">
+        <ksession name="minimim-sp-ksession-rules"/>
+    </kbase>
 </kmodule>

@@ -1,5 +1,7 @@
 package com.bbdrools.model;
 
+import java.util.List;
+
 public class Product {
 
 	private int id;
@@ -9,6 +11,16 @@ public class Product {
 	private double sp;
 	private double cp;
 	
+	private List<Discount> discounts;
+	
+	public List<Discount> getDiscounts() {
+		return discounts;
+	}
+
+	public void setDiscounts(List<Discount> discounts) {
+		this.discounts = discounts;
+	}
+
 	public int getId() {
 		return id;
 	}

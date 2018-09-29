@@ -1,0 +1,51 @@
+//created on: 21 Aug, 2018
+package com.bbdrools
+
+//list any import classes here.
+import com.bbdrools.model.CampaignDiscount;
+
+//declare any global variables here
+
+rule "Selling Price greater than MRP"
+
+    when
+        //conditions
+        $campaignDiscount: CampaignDiscount(sp > mrp)
+    then
+        //actions
+		$campaignDiscount.setValid(false);
+		$campaignDiscount.setValidationMessage($campaignDiscount.getValidationMessage()+ "Selling Price greater than MRP ~ ");
+end
+
+rule "Selling Price less than zero"
+    //include attributes such as "salience" here...
+    when
+        //conditions
+        $campaignDiscount: CampaignDiscount(sp < 0)
+    then
+        //actions
+		$campaignDiscount.setValid(false);
+		$campaignDiscount.setValidationMessage($campaignDiscount.getValidationMessage()+ "Selling Price less than zero ~ ");
+end
+
+rule "Live Campaign Redemption Count should be lesser than Campaign Limit Redemption count"
+    //include attributes such as "salience" here...
+    when
+        //conditions
+        $campaignDiscount: CampaignDiscount(liveCampaignRedemptionCount >= redemptionCampaignLimit)
+    then
+        //actions
+		$campaignDiscount.setValid(false);
+		$campaignDiscount.setValidationMessage($campaignDiscount.getValidationMessage()+ "Live Campaign Redemption Count should be lesser than Campaign Limit Redemption count ~ ");
+end
+
+rule "Live Member Redemption Count should be lesser than Member Limit Redemption count"
+    //include attributes such as "salience" here...
+    when
+        //conditions
+        $campaignDiscount: CampaignDiscount(liveMemberRedemptionCount >= redemptionMemberLimit)
+    then
+        //actions
+		$campaignDiscount.setValid(false);
+		$campaignDiscount.setValidationMessage($campaignDiscount.getValidationMessage()+ "Live Member Redemption Count should be lesser than Member Limit Redemption count ~ ");
+end

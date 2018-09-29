@@ -25,6 +25,10 @@ public class ProductDiscount {
 	private double thresholdMargin;
 	private boolean discountError;
 	private String errorMessage;
+	
+	public ProductDiscount() {
+		setErrorMessage("");
+	}
 
 	public double getMrp() {
 		return mrp;
@@ -153,7 +157,7 @@ public class ProductDiscount {
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
-
+	
 	@Override
 	public String toString() {
 	    StringBuffer buff = new StringBuffer();
@@ -175,4 +179,5 @@ public class ProductDiscount {
 	    buff.append("-----ProductDiscount end-)");
 	    return buff.toString();
 	}
+
 }

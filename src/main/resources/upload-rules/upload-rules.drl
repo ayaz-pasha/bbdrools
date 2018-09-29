@@ -28,40 +28,40 @@ rule "Selling Price less than zero"
 		$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Selling Price less than zero ~ ");
 end
 
-rule "Discounted Value provided by Marketing and Category is higher than the Threshold Margin set for the given SKU"
+//rule "Discounted Value provided by Marketing and Category is higher than the Threshold Margin set for the given SKU"
     //include attributes such as "salience" here...
-    when
+    //when
         //conditions
-        $productDiscount: ProductDiscount(categoryBreakup + marketingBreakup 
-        					> thresholdMargin)
-    then
+        //$productDiscount: ProductDiscount(categoryBreakup + marketingBreakup 
+        //					> thresholdMargin)
+    //then
         //actions
-		$productDiscount.setDiscountError(true);
-		$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Discounted Value provided by Marketing and Category is higher than the Threshold Margin set for the given SKU ~ ");
-end
+		//$productDiscount.setDiscountError(true);
+		//$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Discounted Value provided by Marketing and Category is higher than the Threshold Margin set for the given SKU ~ ");
+//end
 
-rule "Discounted Value provided by Marketing and Category is higher than the MTP"
+//rule "Discounted Value provided by Marketing and Category is higher than the MTP"
     //include attributes such as "salience" here...
-    when
+    //when
         //conditions
-        $productDiscount: ProductDiscount(categoryBreakup + marketingBreakup 
-        					> minimumThresholdPrice)
-    then
+        //$productDiscount: ProductDiscount(categoryBreakup + marketingBreakup 
+        //					> minimumThresholdPrice)
+    //then
         //actions
-		$productDiscount.setDiscountError(true);
-		$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Discounted Value provided by Marketing and Category is higher than the MTP ~ ");
-end
+		//$productDiscount.setDiscountError(true);
+		//$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Discounted Value provided by Marketing and Category is higher than the MTP ~ ");
+//end
 
-rule "Discounted Selling Price less than the Minimum Threshold Price"
+//rule "Discounted Selling Price less than the Minimum Threshold Price"
     //include attributes such as "salience" here...
-    when
+    //when
         //conditions
-        $productDiscount: ProductDiscount(sp < minimumThresholdPrice)
-    then
+        //$productDiscount: ProductDiscount(sp < minimumThresholdPrice)
+    //then
         //actions
-        $productDiscount.setDiscountError(true);
-        $productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Discounted Selling Price less than the Minimum Threshold Price ~ ");
-end
+        //$productDiscount.setDiscountError(true);
+        //$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Discounted Selling Price less than the Minimum Threshold Price ~ ");
+//end
 
 rule "Redemption Limit per Order should be less than or equal to the Redemption Limit per Member"
     //include attributes such as "salience" here...
