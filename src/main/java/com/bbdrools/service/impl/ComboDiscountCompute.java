@@ -3,8 +3,11 @@
  */
 package com.bbdrools.service.impl;
 
-import com.bbdrools.model.ProductDiscount;
+import com.bbdrools.factory.FactoryProducer;
+import com.bbdrools.factory.JAbstractFactory;
 import com.bbdrools.service.IDiscountCompute;
+import com.bbdrools.service.IDiscountType;
+import com.bbdrools.util.JavelinConstants;
 
 /**
  * @author ayazpasha
@@ -12,9 +15,15 @@ import com.bbdrools.service.IDiscountCompute;
  */
 public class ComboDiscountCompute implements IDiscountCompute {
 
-	public ProductDiscount compute(ProductDiscount productDiscount) {
+	/**
+	 * 
+	 */
+	public double compute(double mrp, double targetPrice, String discountType, double discountValue) {
 		
-		return productDiscount;
+		JAbstractFactory discountTypeFactory = FactoryProducer.getFactory(JavelinConstants.DISCOUNT_TYPE);
+		IDiscountType discountTypeObj = discountTypeFactory.getDiscountType(discountType);
+		
+		return discountTypeObj.apply(mrp, targetPrice, discountValue);
 	}
 
 }

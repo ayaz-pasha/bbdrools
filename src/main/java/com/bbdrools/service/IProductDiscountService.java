@@ -3,6 +3,8 @@
  */
 package com.bbdrools.service;
 
+import java.util.List;
+
 import com.bbdrools.model.ProductDiscount;
 
 /**
@@ -11,5 +13,5 @@ import com.bbdrools.model.ProductDiscount;
  */
 public interface IProductDiscountService {
 
-	public ProductDiscount runRules(ProductDiscount productDiscount);
+	public List<ProductDiscount> validate(List<ProductDiscount> productDiscount);
 }

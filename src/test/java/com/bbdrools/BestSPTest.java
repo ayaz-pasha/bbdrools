@@ -1,7 +1,7 @@
 package com.bbdrools;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,12 +15,12 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.StatelessKieSession;
 
-import com.bbdrools.model.BestDiscount;
-import com.bbdrools.model.Discount;
-import com.bbdrools.model.Product;
+import com.bbdrools.model.CampaignDiscount;
+import com.bbdrools.model.JavelinPrice;
+import com.bbdrools.util.JavelinConstants;
 import com.bbdrools.util.KnowledgeSessionHelper;
 
-public class TestMinimumSP {
+public class BestSPTest {
 
 	StatelessKieSession sessionStateless = null;
 	KieSession sessionStateful = null;
@@ -45,7 +45,7 @@ public class TestMinimumSP {
 	public void testFirstOne() {
 		sessionStateful = KnowledgeSessionHelper.
 				getStatefulKnowledgeSession(kieContainer, 
-						"minimim-sp-ksession-rules");		
+						"pricing-ksession-rules");		
 
 		sessionStateful.addEventListener(new RuleRuntimeEventListener() {
 			
@@ -70,29 +70,23 @@ public class TestMinimumSP {
             
             // go !
 			
-			Product product = new Product();
-			product.setId(1);
-			product.setCp(100.0);
-			product.setDesc("Some product");
-			product.setMrp(120.0);
+			JavelinPrice javelinPrice = new JavelinPrice();
+			sessionStateful.setGlobal("javelinPrice", javelinPrice);
+			sessionStateful.setGlobal("redemptionLessCampaigns", new HashSet<Long>());
+			sessionStateful.setGlobal("campaigns", new HashSet<Long>());
+			sessionStateful.setGlobal("netAvailableRedemptionQuantity", 999999l);
 			
-			BestDiscount bestDiscount = new BestDiscount();
-			sessionStateful.setGlobal("bestDiscount", bestDiscount);
-			sessionStateful.setGlobal("campaigns", new ArrayList<Long>());
+			CampaignDiscount discount1 = new CampaignDiscount(1l, 100.0, 0.0, JavelinConstants.FLAT, 10, JavelinConstants.REGULAR, 9999999, 10, 2, 990, 10);
+			CampaignDiscount discount2 = new CampaignDiscount(2l, 100.0, 50.0, JavelinConstants.FIXED, 0, JavelinConstants.REGULAR, 1000, 10, 2, 990, 10);
+			CampaignDiscount discount3 = new CampaignDiscount(3l, 100.0, 0.0, JavelinConstants.PERCENT, 25, JavelinConstants.REGULAR, 9999999, 10, 2, 1001, 10);
+			CampaignDiscount discount4 = new CampaignDiscount(4l, 100.0, 0.0, JavelinConstants.PERCENT, 20, JavelinConstants.REGULAR, 1000, 10, 2, 990, 5);
 			
-			List<Discount> discounts = new ArrayList<Discount>();
-			Discount discount1 = new Discount(1, 2.0, "A", 1, 11);
-			Discount discount2 = new Discount(2, 0.0, "A", 2, 22);
-			Discount discount3 = new Discount(3, 5.0, "B", 3, 33);
-			Discount discount4 = new Discount(4, 25.0, "B", 4, 44);
-			Discount discount5 = new Discount(5, 1.0, "C", 5, 55);
-			Discount discount6 = new Discount(6, 15.0, "A", 6, 66);
-			Discount discount7 = new Discount(7, 60.0, "B", 7, 77);
-			Discount discount8 = new Discount(8, 0.5, "C", 8, 88);
-			Discount discount9 = new Discount(9, 55.0, "A", 9, 99);
-			Discount discount10 = new Discount(10, 15.0, "B", 10, 101);
-			Discount discount11 = new Discount(11, 50.0, "A", 11, 111);
-			Discount discount12 = new Discount(12, 15.0, "B", 12, 122);
+			CampaignDiscount discount5 = new CampaignDiscount(5l, 100.0, 50.0, JavelinConstants.FIXED, 0, JavelinConstants.DIFFERENTIAL, 9999999, 10, 2, 990, 5);
+			CampaignDiscount discount9 = new CampaignDiscount(9l, 100.0, 55.0, JavelinConstants.FIXED, 0, JavelinConstants.DIFFERENTIAL, 1000, 10, 2, 990, 5);
+			
+			CampaignDiscount discount6 = new CampaignDiscount(6l, 100.0, 0.0, JavelinConstants.FLAT, 10, JavelinConstants.ADDON, 9999999, 10, 2, 990, 9);
+			CampaignDiscount discount7 = new CampaignDiscount(7l, 100.0, 0.0, JavelinConstants.PERCENT, 5, JavelinConstants.ADDON, 1000, 10, 2, 990, 5);
+			CampaignDiscount discount8 = new CampaignDiscount(8l, 100.0, 0.0, JavelinConstants.FLAT, 5, JavelinConstants.ADDON, 1000, 10, 2, 990, 5);
 			
 			sessionStateful.insert(discount1);
 			sessionStateful.insert(discount2);
@@ -103,18 +97,14 @@ public class TestMinimumSP {
 			sessionStateful.insert(discount7);
 			sessionStateful.insert(discount8);
 			sessionStateful.insert(discount9);
-			sessionStateful.insert(discount10);
-			sessionStateful.insert(discount11);
-			sessionStateful.insert(discount12);
-			
-			product.setDiscounts(discounts);
-            
-            //sessionStateful.insert(product);
-            
+
             sessionStateful.fireAllRules();
             
-            bestDiscount.setCampaigns((ArrayList<Long>) sessionStateful.getGlobal("campaigns"));
-            System.out.println("Best Discount final: "+ bestDiscount);
+            javelinPrice.setCampaigns((Set<Long>) sessionStateful.getGlobal("campaigns"));
+            javelinPrice.setRedemptionLessCampaigns((Set<Long>) sessionStateful.getGlobal("redemptionLessCampaigns"));
+            System.out.println(sessionStateful.getGlobal("netAvailableRedemptionQuantity"));
+            
+            System.out.println("Best SP final: "+ javelinPrice);
 			
             sessionStateful.dispose();
             sessionStateful.destroy();

@@ -9,8 +9,8 @@ import com.bbdrools.model.CampaignDiscount;
  * @author ayazpasha
  *
  */
-public interface ICampaignDiscountService {
+public interface IJavelinPricingService {
 	
-	public CampaignDiscount runRules(CampaignDiscount campaignDiscount);
+	public CampaignDiscount compute(CampaignDiscount campaignDiscount);
 
 }

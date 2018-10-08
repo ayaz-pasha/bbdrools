@@ -3,6 +3,9 @@
  */
 package com.bbdrools.resources;
 
+import java.util.List;
+
+import javax.validation.Valid;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -15,10 +18,12 @@ import com.bbdrools.service.impl.ProductDiscountServiceImpl;
 import com.codahale.metrics.annotation.Timed;
 
 /**
+ * APIs for upload time validation
+ * 
  * @author ayazpasha
  *
  */
-@Path("/api/product-discount")
+@Path("/javelin/api/discount")
 @Produces(MediaType.APPLICATION_JSON)
 public class ProductDiscountResource {
 
@@ -30,14 +35,15 @@ public class ProductDiscountResource {
 	
 	@POST
     @Timed
-    @Path("/check")
-    public Response runRules(ProductDiscount productDiscount) {
+    @Path("/validation")
+    public Response discountValidation(@Valid List<ProductDiscount> productDiscounts) {
     	IProductDiscountService service = 
 				new ProductDiscountServiceImpl();
 		
-    	ProductDiscount response = 
-    			service.runRules(productDiscount);
+    	List<ProductDiscount> response = 
+    			service.validate(productDiscounts);
 		
 		return Response.status(200).entity(response).build();
     }
+	
 }

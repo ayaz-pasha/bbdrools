@@ -3,8 +3,6 @@
  */
 package com.bbdrools.service;
 
-import com.bbdrools.model.ProductDiscount;
-
 /**
  * @author ayazpasha
  *
@@ -18,6 +16,6 @@ public interface IDiscountCompute {
 	 * @param productDiscount
 	 * @return ProductDiscount
 	 */
-	public ProductDiscount compute(ProductDiscount productDiscount);
+	public double compute(double mrp, double targetPrice, String discountType, double discountValue);
 
 }

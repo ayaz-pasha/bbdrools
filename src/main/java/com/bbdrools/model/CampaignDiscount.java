@@ -3,18 +3,24 @@
  */
 package com.bbdrools.model;
 
+import com.bbdrools.factory.FactoryProducer;
+import com.bbdrools.factory.JAbstractFactory;
+import com.bbdrools.service.IDiscountCompute;
+import com.bbdrools.util.JavelinConstants;
+
 /**
  * @author ayazpasha
  *
  */
 public class CampaignDiscount {
 	
+	private long campaignId;
 	private double mrp;
 	private double sp;
-	private double discountPrice;
+	private double targetPrice;
 	private String discountType;
 	private double discountValue;
-	private String discountCategory;
+	private String discountTier;
 	private double vendorBreakup;
 	private double categoryBreakup;
 	private double marketingBreakup;
@@ -30,6 +36,7 @@ public class CampaignDiscount {
 	private long redemptionSPQuantity;*/
 	private long remainingMemberLimit;
 	private long remainingCampaignLimit;
+	private boolean redemption;
 	private boolean valid;
 	private String validationMessage;
 	
@@ -40,9 +47,48 @@ public class CampaignDiscount {
 		 * this will be used for evaluation later
 		 * 
 		 */
+		setSp(computeSP());
+		setRedemption(computeRedemption());
 		setRemainingMemberLimit(computeRemainingCampaignLimit());
-		setRemainingMemberLimit(computeRemainingMemberLimit());
+		setRemainingCampaignLimit(computeRemainingMemberLimit());
 		setAvailableRedemptionQuantity(computeAvailableRedemptionQuantity());
+	}
+	
+	public CampaignDiscount(long campaignId, double mrp, double targetPrice,
+			String discountType, double discountValue, String discountTier,
+			int redemptionCampaignLimit, int redemptionMemberLimit, int redemptionOrderLimit,
+			int liveCampaignRedemptionCount, int liveMemberRedemptionCount) {
+		
+		setCampaignId(campaignId);
+		setMrp(mrp);
+		setTargetPrice(targetPrice);
+		setDiscountType(discountType);
+		setDiscountValue(discountValue);
+		setDiscountTier(discountTier);
+		setRedemptionCampaignLimit(redemptionCampaignLimit);
+		setRedemptionMemberLimit(redemptionMemberLimit);
+		setRedemptionOrderLimit(redemptionOrderLimit);
+		setLiveCampaignRedemptionCount(liveCampaignRedemptionCount);
+		setLiveMemberRedemptionCount(liveMemberRedemptionCount);
+		
+		/**
+		 * compute intuitive values at the time of creation
+		 * this will be used for evaluation later
+		 * 
+		 */
+		setSp(computeSP());
+		setRedemption(computeRedemption());
+		setRemainingMemberLimit(computeRemainingCampaignLimit());
+		setRemainingCampaignLimit(computeRemainingMemberLimit());
+		setAvailableRedemptionQuantity(computeAvailableRedemptionQuantity());
+	}
+
+	public long getCampaignId() {
+		return campaignId;
+	}
+
+	public void setCampaignId(long campaignId) {
+		this.campaignId = campaignId;
 	}
 
 	public double getMrp() {
@@ -61,12 +107,12 @@ public class CampaignDiscount {
 		this.sp = sp;
 	}
 	
-	public double getDiscountPrice() {
-		return discountPrice;
+	public double getTargetPrice() {
+		return targetPrice;
 	}
 
-	public void setDiscountPrice(double discountPrice) {
-		this.discountPrice = discountPrice;
+	public void setTargetPrice(double targetPrice) {
+		this.targetPrice = targetPrice;
 	}
 
 	public String getDiscountType() {
@@ -85,12 +131,12 @@ public class CampaignDiscount {
 		this.discountValue = discountValue;
 	}
 
-	public String getDiscountCategory() {
-		return discountCategory;
+	public String getDiscountTier() {
+		return discountTier;
 	}
 
-	public void setDiscountCategory(String discountCategory) {
-		this.discountCategory = discountCategory;
+	public void setDiscountTier(String discountTier) {
+		this.discountTier = discountTier;
 	}
 
 	public double getVendorBreakup() {
@@ -212,6 +258,14 @@ public class CampaignDiscount {
 	public void setRemainingCampaignLimit(long remainingCampaignLimit) {
 		this.remainingCampaignLimit = remainingCampaignLimit;
 	}
+	
+	public boolean hasRedemption() {
+		return redemption;
+	}
+
+	public void setRedemption(boolean redemption) {
+		this.redemption = redemption;
+	}
 
 	public boolean isValid() {
 		return valid;
@@ -233,12 +287,31 @@ public class CampaignDiscount {
 	 * 
 	 * @return
 	 */
+	private double computeSP() {
+
+		JAbstractFactory discountComputeFactory = 
+				FactoryProducer.getFactory(JavelinConstants.DISCOUNT_COMPUTE);
+		IDiscountCompute discountCompute = 
+				discountComputeFactory.getDiscountCompute(getDiscountTier());
+		
+		return discountCompute.compute(getMrp(), getTargetPrice(), getDiscountType(), getDiscountValue());
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	private long computeAvailableRedemptionQuantity() {
 		
-		long availableRedemptionQuantity = Math.min(getRedemptionOrderLimit(), 
-				Math.min(getRemainingMemberLimit(), getRemainingCampaignLimit()));
+		if(!hasRedemption()) return JavelinConstants.UNLIMITED_REDEMPTION; 
+		else {
 		
-		return availableRedemptionQuantity;
+			long availableRedemptionQuantity = Math.min(getRedemptionOrderLimit(), 
+					Math.min(getRemainingMemberLimit(), getRemainingCampaignLimit()));
+			
+			return availableRedemptionQuantity;
+		}
+		
 	}
 	
 	/**
@@ -264,23 +337,57 @@ public class CampaignDiscount {
 		
 		return (remainingCampaignLimit < 0) ? 0 : remainingCampaignLimit;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public double computeSP(double basePrice) {
+
+		JAbstractFactory discountComputeFactory = 
+				FactoryProducer.getFactory(JavelinConstants.DISCOUNT_COMPUTE);
+		IDiscountCompute discountCompute = 
+				discountComputeFactory.getDiscountCompute(getDiscountTier());
+		
+		return discountCompute.compute(basePrice, getTargetPrice(), getDiscountType(), getDiscountValue());
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private boolean computeRedemption() {
+
+		if(getRedemptionCampaignLimit() == JavelinConstants.UNLIMITED_REDEMPTION) {
+			
+			return false;
+		}
+		
+		return true;
+	}
 
 	@Override
 	public String toString() {
 	    StringBuffer buff = new StringBuffer();
 	    buff.append("-----CampaignDiscount-----)\n");
+	    buff.append("CampaignID=" + getCampaignId() + "\n");
 	    buff.append("MRP=" + getMrp() + "\n");
 	    buff.append("SP=" + getSp() + "\n");
-	    buff.append("DiscountPrice=" + getDiscountPrice() + "\n");
+	    buff.append("TargetPrice=" + getTargetPrice() + "\n");
 	    buff.append("DiscountType=" + getDiscountType() + "\n");
 	    buff.append("DiscountValue=" + getDiscountValue() + "\n");
-	    buff.append("DiscountCategory=" + getDiscountCategory() + "\n");
+	    buff.append("DiscountTier=" + getDiscountTier() + "\n");
 	    buff.append("VendorBreakup=" + getVendorBreakup() + "\n");
 	    buff.append("MarketingBreakup=" + getMarketingBreakup() + "\n");
 	    buff.append("CategoryBreakup=" + getCategoryBreakup() + "\n");
 	    buff.append("RedemptionOrderLimit=" + getRedemptionOrderLimit() + "\n");
 	    buff.append("RedemptionMemberLimit=" + getRedemptionMemberLimit() + "\n");
 	    buff.append("RedemptionCampaignLimit=" + getRedemptionCampaignLimit() + "\n");
+	    buff.append("AvailableRedemptionQuanity=" + getAvailableRedemptionQuantity() + "\n");
+	    buff.append("LiveCampaignRedemptionCount=" + getLiveCampaignRedemptionCount() + "\n");
+	    buff.append("LiveMemberRedemptionCount=" + getLiveMemberRedemptionCount() + "\n");
+	    buff.append("RemainingCampaignLimit=" + getRemainingCampaignLimit() + "\n");
+	    buff.append("RemainingMemberLimit=" + getRemainingMemberLimit() + "\n");
 	    buff.append("Valid=" + isValid() + "\n");
 	    buff.append("ValidationMessage=" + getValidationMessage() + "\n");
 	    buff.append("-----CampaignDiscount end-)");

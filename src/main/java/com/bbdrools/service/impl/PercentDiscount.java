@@ -3,17 +3,20 @@
  */
 package com.bbdrools.service.impl;
 
-import com.bbdrools.service.IDiscount;
+import com.bbdrools.service.IDiscountType;
 
 /**
  * @author ayazpasha
  *
  */
-public class PercentDiscount implements IDiscount {
+public class PercentDiscount implements IDiscountType {
 
-	public void apply() {
-		// TODO Auto-generated method stub
-		
+	/**
+	 * 
+	 */
+	public double apply(double mrp, double targetPrice, double discountValue) {
+
+		return mrp - (mrp * discountValue / 100);
 	}
 
 }

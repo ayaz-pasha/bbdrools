@@ -16,7 +16,7 @@ rule "Best SP from all Regular Campaigns"
         Discount($highestDiscount : discountPrice, $id: id, $cat: category, $c_id: campaignId, category == "A");
         not Discount(discountPrice > $highestDiscount, category == "A");
     then
-        System.out.println("Best discount: "+ $highestDiscount +" ID: "+ $id +" Cat: "+ $cat +" Best: "+ bestDiscount.getDiscountPrice());
+        //System.out.println("Best discount: "+ $highestDiscount +" ID: "+ $id +" Cat: "+ $cat +" Best: "+ bestDiscount.getDiscountPrice());
         bestDiscount.setDiscountPrice($highestDiscount);
         campaigns.add($c_id); 
         //drools.setFocus("Differential");
@@ -28,7 +28,7 @@ rule "Best SP from all Differential Campaigns on top of Regular Campaigns"
         Discount($highestDiscount : discountPrice, $c_id: campaignId, $id: id, $cat: category, category == "B");
         not Discount(discountPrice > $highestDiscount, category == "B"); 
     then
-        System.out.println("Best discount: "+ $highestDiscount +" ID: "+ $id +" Cat: "+ $cat +" Best: "+ bestDiscount.getDiscountPrice());
+        //System.out.println("Best discount: "+ $highestDiscount +" ID: "+ $id +" Cat: "+ $cat +" Best: "+ bestDiscount.getDiscountPrice());
         if($highestDiscount > bestDiscount.getDiscountPrice()) {
         	bestDiscount.setDiscountPrice($highestDiscount);	
         	campaigns.add($c_id);
@@ -42,7 +42,7 @@ rule "Apply Addon Campaigns on top of Regular + Differential Campaigns"
     when
         $discount: Discount($discountPrice : discountPrice, $c_id: campaignId, $id: id, $cat: category, category == "C"); 
     then
-        System.out.println("Update Best discount: "+ $discountPrice +" ID: "+ $id +" Cat: "+ $cat +" Best: "+ bestDiscount.getDiscountPrice());
+        //System.out.println("Update Best discount: "+ $discountPrice +" ID: "+ $id +" Cat: "+ $cat +" Best: "+ bestDiscount.getDiscountPrice());
 		modify($discount) {
 			setDiscountPrice(bestDiscount.getDiscountPrice() + ($discountPrice * bestDiscount.getDiscountPrice() / 100));
 		};
@@ -54,12 +54,36 @@ rule "Best SP from Addon Campaigns on top of Regular + Differential Campaigns"
         Discount($highestDiscount : discountPrice, $c_id: campaignId, $id: id, $cat: category, category == "C");
         not Discount(discountPrice > $highestDiscount, category == "C"); 
     then
-        System.out.println("Best discount: "+ $highestDiscount +" ID: "+ $id +" Cat: "+ $cat +" Best: "+ bestDiscount.getDiscountPrice());
+        //System.out.println("Best discount: "+ $highestDiscount +" ID: "+ $id +" Cat: "+ $cat +" Best: "+ bestDiscount.getDiscountPrice());
         if($highestDiscount > bestDiscount.getDiscountPrice()) {
         	bestDiscount.setDiscountPrice($highestDiscount);	
         	campaigns.add($c_id);
-        }
-    
+        }    
+end
+
+rule "Apply Combo Campaigns on top of Regular + Differential + Addon Campaigns"
+	//agenda-group "Combo"
+	no-loop
+    when
+        $discount: Discount($discountPrice : discountPrice, $c_id: campaignId, $id: id, $cat: category, category == "D"); 
+    then
+        //System.out.println("Update Best discount: "+ $discountPrice +" ID: "+ $id +" Cat: "+ $cat +" Best: "+ bestDiscount.getDiscountPrice());
+		modify($discount) {
+			setDiscountPrice(bestDiscount.getDiscountPrice() + ($discountPrice * bestDiscount.getDiscountPrice() / 100));
+		};
+end
+
+rule "Best SP from Combo Campaigns on top of Regular + Differential + Addon Campaigns"
+	//agenda-group "Combo"
+    when
+        Discount($highestDiscount : discountPrice, $c_id: campaignId, $id: id, $cat: category, category == "D");
+        not Discount(discountPrice > $highestDiscount, category == "D"); 
+    then
+        //System.out.println("Best discount: "+ $highestDiscount +" ID: "+ $id +" Cat: "+ $cat +" Best: "+ bestDiscount.getDiscountPrice());
+        if($highestDiscount > bestDiscount.getDiscountPrice()) {
+        	bestDiscount.setDiscountPrice($highestDiscount);	
+        	campaigns.add($c_id);
+        }    
 end
 
 //Item($lowestPrice : price, $id : id)

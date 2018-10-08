@@ -1,51 +1,158 @@
-//created on: 21 Aug, 2018
+//created on: 27 Sep, 2018
 package com.bbdrools
 
 //list any import classes here.
+import java.util.Set;
+import com.bbdrools.util.JavelinConstants;
 import com.bbdrools.model.CampaignDiscount;
+import com.bbdrools.model.JavelinPrice;
+import com.bbdrools.service.IDiscountCompute;
 
 //declare any global variables here
+global JavelinPrice javelinPrice;
+global IDiscountCompute discountCompute;
+global Set<Long> campaigns;
+global Set<Long> redemptionLessCampaigns;
+global Long netAvailableRedemptionQuantity;
 
-rule "Selling Price greater than MRP"
-
+rule "Best SP from all Redemption less Regular Campaigns"
     when
-        //conditions
-        $campaignDiscount: CampaignDiscount(sp > mrp)
+    	CampaignDiscount($lowestSP : sp, $cId: campaignId, (discountTier == JavelinConstants.REGULAR && redemptionCampaignLimit == JavelinConstants.UNLIMITED_REDEMPTION));
+        not CampaignDiscount(sp < $lowestSP, (discountTier == JavelinConstants.REGULAR && redemptionCampaignLimit == JavelinConstants.UNLIMITED_REDEMPTION));
     then
-        //actions
-		$campaignDiscount.setValid(false);
-		$campaignDiscount.setValidationMessage($campaignDiscount.getValidationMessage()+ "Selling Price greater than MRP ~ ");
+        //System.out.println("Best sp: "+ $lowestSP +" ID: "+ $cId +" Category: "+ JavelinConstants.REGULAR +" Best: "+ javelinPrice.getSp());
+        javelinPrice.setRsp($lowestSP);
+        redemptionLessCampaigns.add($cId); 
 end
 
-rule "Selling Price less than zero"
-    //include attributes such as "salience" here...
+rule "Best SP from all Redemption less Differential Campaigns on top of Regular Campaigns"
     when
-        //conditions
-        $campaignDiscount: CampaignDiscount(sp < 0)
+        CampaignDiscount($lowestSP : targetPrice, $cId: campaignId, (discountTier == JavelinConstants.DIFFERENTIAL && redemptionCampaignLimit == JavelinConstants.UNLIMITED_REDEMPTION));
+        not CampaignDiscount(targetPrice < $lowestSP, (discountTier == JavelinConstants.DIFFERENTIAL && redemptionCampaignLimit == JavelinConstants.UNLIMITED_REDEMPTION)); 
     then
-        //actions
-		$campaignDiscount.setValid(false);
-		$campaignDiscount.setValidationMessage($campaignDiscount.getValidationMessage()+ "Selling Price less than zero ~ ");
+        //System.out.println("Best sp: "+ $lowestSP +" ID: "+ $cId +" Category: "+ DiscountTier.DIFFERENTIAL +" Best: "+ bestDiscount.getDiscountPrice());
+        if($lowestSP < javelinPrice.getRsp()) {
+        	javelinPrice.setRsp($lowestSP);	
+        	redemptionLessCampaigns.add($cId);
+        } 
 end
 
-rule "Live Campaign Redemption Count should be lesser than Campaign Limit Redemption count"
-    //include attributes such as "salience" here...
+rule "Apply Redemption less Addon Campaigns on top of Redemption less Regular + Differential Campaigns"
+	no-loop
     when
-        //conditions
-        $campaignDiscount: CampaignDiscount(liveCampaignRedemptionCount >= redemptionCampaignLimit)
+        $campaignDiscount: CampaignDiscount($discType : discountType, $discVal : discountValue, $cId: campaignId, (discountTier == JavelinConstants.ADDON && redemptionCampaignLimit == JavelinConstants.UNLIMITED_REDEMPTION)); 
     then
-        //actions
-		$campaignDiscount.setValid(false);
-		$campaignDiscount.setValidationMessage($campaignDiscount.getValidationMessage()+ "Live Campaign Redemption Count should be lesser than Campaign Limit Redemption count ~ ");
+        //System.out.println("Best sp: "+ $lowestSP +" ID: "+ $cId +" Category: "+ DiscountTier.ADDON +" Best: "+ bestDiscount.getDiscountPrice());
+		modify($campaignDiscount) {
+			setSp($campaignDiscount.computeSP(javelinPrice.getRsp()));
+		};
 end
 
-rule "Live Member Redemption Count should be lesser than Member Limit Redemption count"
-    //include attributes such as "salience" here...
+rule "Best SP from Redemption less Addon Campaigns on top of Redemption less Regular + Differential Campaigns"
     when
-        //conditions
-        $campaignDiscount: CampaignDiscount(liveMemberRedemptionCount >= redemptionMemberLimit)
+        CampaignDiscount($lowestSP : sp, $cId: campaignId, (discountTier == JavelinConstants.ADDON && redemptionCampaignLimit == JavelinConstants.UNLIMITED_REDEMPTION));
+        not CampaignDiscount(sp < $lowestSP, discountTier == JavelinConstants.ADDON); 
     then
-        //actions
-		$campaignDiscount.setValid(false);
-		$campaignDiscount.setValidationMessage($campaignDiscount.getValidationMessage()+ "Live Member Redemption Count should be lesser than Member Limit Redemption count ~ ");
+        //System.out.println("Best sp: "+ $lowestSP +" ID: "+ $cId +" Category: "+ DiscountTier.ADDON +" Best: "+ bestDiscount.getDiscountPrice());
+        if($lowestSP < javelinPrice.getRsp()) {
+        	javelinPrice.setRsp($lowestSP);	
+        	redemptionLessCampaigns.add($cId);
+        }    
+end
+
+rule "Apply Redemption less Combo Campaigns on top of Redemption less Regular + Differential + Addon Campaigns"
+	no-loop
+    when
+        $campaignDiscount: CampaignDiscount($lowestSP : sp, $cId: campaignId, (discountTier == JavelinConstants.COMBO && redemptionCampaignLimit == JavelinConstants.UNLIMITED_REDEMPTION)); 
+    then
+        //System.out.println("Best sp: "+ $lowestSP +" ID: "+ $cId +" Category: "+ DiscountTier.COMBO +" Best: "+ bestDiscount.getDiscountPrice());
+		modify($campaignDiscount) {
+			setSp($campaignDiscount.computeSP(javelinPrice.getRsp()));
+		};
+end
+
+rule "Best SP from Redemption less Combo Campaigns on top of Redemption less Regular + Differential + Addon Campaigns"
+    when
+        CampaignDiscount($lowestSP : sp, $cId: campaignId, (discountTier == JavelinConstants.COMBO && redemptionCampaignLimit == JavelinConstants.UNLIMITED_REDEMPTION));
+        not CampaignDiscount(sp < $lowestSP, (discountTier == JavelinConstants.COMBO && redemptionCampaignLimit == JavelinConstants.UNLIMITED_REDEMPTION)); 
+    then
+        //System.out.println("Best sp: "+ $lowestSP +" ID: "+ $cId +" Category: "+ DiscountTier.COMBO +" Best: "+ bestDiscount.getDiscountPrice());
+        if($lowestSP < javelinPrice.getRsp()) {
+        	javelinPrice.setRsp($lowestSP);	
+        	redemptionLessCampaigns.add($cId);
+        }    
+end
+
+rule "Best SP from all Regular Campaigns"
+    when
+        CampaignDiscount($lowestSP : sp, $cId: campaignId, $arq: availableRedemptionQuantity, (discountTier == JavelinConstants.REGULAR && availableRedemptionQuantity > 0));
+        not CampaignDiscount(sp < $lowestSP, (discountTier == JavelinConstants.REGULAR && availableRedemptionQuantity > 0));
+    then
+        //System.out.println("Best sp: "+ $lowestSP +" ID: "+ $cId +" Category: "+ JavelinConstants.REGULAR +" Best: "+ javelinPrice.getSp());
+        javelinPrice.setSp($lowestSP);
+        campaigns.add($cId); 
+end
+
+rule "Best SP from all Differential Campaigns on top of Regular Campaigns"
+    when
+        CampaignDiscount($lowestSP : targetPrice, $cId: campaignId, $arq: availableRedemptionQuantity, (discountTier == JavelinConstants.DIFFERENTIAL && availableRedemptionQuantity > 0));
+        not CampaignDiscount(targetPrice < $lowestSP, (discountTier == JavelinConstants.DIFFERENTIAL && availableRedemptionQuantity > 0)); 
+    then
+        //System.out.println("Best sp: "+ $lowestSP +" ID: "+ $cId +" Category: "+ DiscountTier.DIFFERENTIAL +" Best: "+ bestDiscount.getDiscountPrice());
+        if($lowestSP < javelinPrice.getSp()) {
+        	javelinPrice.setSp($lowestSP);	
+        	netAvailableRedemptionQuantity = netAvailableRedemptionQuantity > $arq ? $arq : netAvailableRedemptionQuantity;
+        	javelinPrice.setNarq(netAvailableRedemptionQuantity);
+        	campaigns.add($cId);
+        } 
+end
+
+rule "Apply Addon Campaigns on top of Regular + Differential Campaigns"
+	no-loop
+    when
+        $discount: CampaignDiscount($discType : discountType, $discVal : discountValue, $cId: campaignId, (discountTier == JavelinConstants.ADDON && availableRedemptionQuantity > 0)); 
+    then
+        //System.out.println("Best sp: "+ $lowestSP +" ID: "+ $cId +" Category: "+ DiscountTier.ADDON +" Best: "+ bestDiscount.getDiscountPrice());
+		modify($discount) {
+			setSp($discount.computeSP(javelinPrice.getSp()));
+		};
+end
+
+rule "Best SP from Addon Campaigns on top of Regular + Differential Campaigns"
+    when
+        CampaignDiscount($lowestSP : sp, $cId: campaignId, $arq: availableRedemptionQuantity, (discountTier == JavelinConstants.ADDON && availableRedemptionQuantity > 0));
+        not CampaignDiscount(sp < $lowestSP, (discountTier == JavelinConstants.ADDON && availableRedemptionQuantity > 0)); 
+    then
+        //System.out.println("Best sp: "+ $lowestSP +" ID: "+ $cId +" Category: "+ DiscountTier.ADDON +" Best: "+ bestDiscount.getDiscountPrice());
+        if($lowestSP < javelinPrice.getSp()) {
+        	javelinPrice.setSp($lowestSP);	
+        	netAvailableRedemptionQuantity = netAvailableRedemptionQuantity > $arq ? $arq : netAvailableRedemptionQuantity;
+        	javelinPrice.setNarq(netAvailableRedemptionQuantity);
+        	campaigns.add($cId);
+        }    
+end
+
+rule "Apply Combo Campaigns on top of Regular + Differential + Addon Campaigns"
+	no-loop
+    when
+        $discount: CampaignDiscount($lowestSP : sp, $cId: campaignId, $arq: availableRedemptionQuantity, (discountTier == JavelinConstants.COMBO && availableRedemptionQuantity > 0)); 
+    then
+        //System.out.println("Best sp: "+ $lowestSP +" ID: "+ $cId +" Category: "+ DiscountTier.COMBO +" Best: "+ bestDiscount.getDiscountPrice());
+		modify($discount) {
+			setSp($discount.computeSP(javelinPrice.getSp()));
+		};
+end
+
+rule "Best SP from Combo Campaigns on top of Regular + Differential + Addon Campaigns"
+    when
+        CampaignDiscount($lowestSP : sp, $cId: campaignId, $arq: availableRedemptionQuantity, (discountTier == JavelinConstants.COMBO && availableRedemptionQuantity > 0));
+        not CampaignDiscount(sp < $lowestSP, (discountTier == JavelinConstants.COMBO && availableRedemptionQuantity > 0)); 
+    then
+        //System.out.println("Best sp: "+ $lowestSP +" ID: "+ $cId +" Category: "+ DiscountTier.COMBO +" Best: "+ bestDiscount.getDiscountPrice());
+        if($lowestSP < javelinPrice.getSp()) {
+        	javelinPrice.setSp($lowestSP);	
+        	netAvailableRedemptionQuantity = netAvailableRedemptionQuantity > $arq ? $arq : netAvailableRedemptionQuantity;
+        	javelinPrice.setNarq(netAvailableRedemptionQuantity);
+        	campaigns.add($cId);
+        }    
 end

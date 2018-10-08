@@ -40,10 +40,10 @@ public class DiscountResponseDTO {
 		this.validDiscounts.add(discount);
 	}
 	
-	public void sortAndGetBestDiscount() {
+	/*public void sortAndGetBestDiscount() {
 		Collections.sort(this.validDiscounts);
 		if(this.validDiscounts.size() > 0) { 
 			setHighestDiscount(this.validDiscounts.get(0)); 
 		}
-	}
+	}*/
 }

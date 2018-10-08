@@ -35,7 +35,7 @@ public class BBDroolsProductServiceImpl implements IBBDroolsProductService {
             kSession.dispose();
             kSession.destroy();
             
-            discountResponseDTO.sortAndGetBestDiscount();
+            //discountResponseDTO.sortAndGetBestDiscount();
 
 		} catch (Throwable t) {
             t.printStackTrace();

@@ -3,6 +3,7 @@ package com.bbdrools;
 import com.bbdrools.healthcheck.BBDroolsHealthCheck;
 import com.bbdrools.resources.BBDroolsProductResource;
 import com.bbdrools.resources.BBDroolsResource;
+import com.bbdrools.resources.JavelinPricingResource;
 import com.bbdrools.resources.ProductDiscountResource;
 
 import io.dropwizard.Application;
@@ -39,6 +40,9 @@ public class BBDroolsApplication extends Application<BBDroolsConfiguration>{
 		final ProductDiscountResource productDiscountResource = new ProductDiscountResource(
 				configuration.getTemplate());
 		
+		final JavelinPricingResource javelinPricingResource = new JavelinPricingResource(
+				configuration.getTemplate());
+		
 		final BBDroolsHealthCheck healthCheck =
 		        new BBDroolsHealthCheck(configuration.getTemplate());
 		    environment.healthChecks().register("template", healthCheck);
@@ -46,6 +50,7 @@ public class BBDroolsApplication extends Application<BBDroolsConfiguration>{
 		environment.jersey().register(resource);
 		environment.jersey().register(productResource);
 		environment.jersey().register(productDiscountResource);
+		environment.jersey().register(javelinPricingResource);
 	}
 
 }
