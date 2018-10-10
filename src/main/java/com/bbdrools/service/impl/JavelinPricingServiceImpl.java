@@ -3,7 +3,8 @@
  */
 package com.bbdrools.service.impl;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.kie.api.runtime.KieContainer;
@@ -23,29 +24,35 @@ public class JavelinPricingServiceImpl implements IJavelinPricingService {
 	/**
 	 * 
 	 */
-	public CampaignDiscount compute(CampaignDiscount campaignDiscount) {
-
+	public JavelinPrice compute(List<CampaignDiscount> campaignDiscounts) {
+		
+		JavelinPrice javelinPrice = new JavelinPrice();
+		
 		try {
 
 			KieContainer kContainer = KnowledgeSessionHelper.createRuleBase();
             KieSession kSession = KnowledgeSessionHelper.
-            		getStatefulKnowledgeSessionWithCallback(kContainer, "render-ksession-rules");
+            		getStatefulKnowledgeSessionWithCallback(kContainer, "pricing-ksession-rules");
             
             // go !
             
-            JavelinPrice javelinPrice = new JavelinPrice();
-            kSession.setGlobal("bestDiscount", javelinPrice);
-            kSession.setGlobal("campaigns", new ArrayList<Long>());
-            kSession.setGlobal("netAvailableRedemptionQuantity", 9999999l);
+            kSession.setGlobal("javelinPrice", javelinPrice);
+            kSession.setGlobal("redemptionLessCampaigns", new HashSet<Long>());
+            kSession.setGlobal("campaigns", new HashSet<Long>());
+            kSession.setGlobal("netAvailableRedemptionQuantity", 999999l);
             
-            kSession.insert(campaignDiscount);
-            
+            for(CampaignDiscount campaignDiscount : campaignDiscounts) {
+            	campaignDiscount.populate();
+            	kSession.insert(campaignDiscount);
+            }
+			
             // fire !
             
             kSession.fireAllRules();
             
-            
             javelinPrice.setCampaigns((Set<Long>) kSession.getGlobal("campaigns"));
+            javelinPrice.setRedemptionLessCampaigns((Set<Long>) kSession.getGlobal("redemptionLessCampaigns"));
+            
             System.out.println("Best Discount final: "+ javelinPrice);
 			
             
@@ -58,7 +65,7 @@ public class JavelinPricingServiceImpl implements IJavelinPricingService {
             t.printStackTrace();
         }
 		
-		return campaignDiscount;
+		return javelinPrice;
 	}
 
 }

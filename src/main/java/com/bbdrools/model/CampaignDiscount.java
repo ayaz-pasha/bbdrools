@@ -17,6 +17,7 @@ public class CampaignDiscount {
 	private long campaignId;
 	private double mrp;
 	private double sp;
+	private double rsp;
 	private double targetPrice;
 	private String discountType;
 	private double discountValue;
@@ -40,19 +41,7 @@ public class CampaignDiscount {
 	private boolean valid;
 	private String validationMessage;
 	
-	public CampaignDiscount() {
-		
-		/**
-		 * compute intuitive values at the time of creation
-		 * this will be used for evaluation later
-		 * 
-		 */
-		setSp(computeSP());
-		setRedemption(computeRedemption());
-		setRemainingMemberLimit(computeRemainingCampaignLimit());
-		setRemainingCampaignLimit(computeRemainingMemberLimit());
-		setAvailableRedemptionQuantity(computeAvailableRedemptionQuantity());
-	}
+	public CampaignDiscount() {}
 	
 	public CampaignDiscount(long campaignId, double mrp, double targetPrice,
 			String discountType, double discountValue, String discountTier,
@@ -77,6 +66,7 @@ public class CampaignDiscount {
 		 * 
 		 */
 		setSp(computeSP());
+		setRsp(computeRSP());
 		setRedemption(computeRedemption());
 		setRemainingMemberLimit(computeRemainingCampaignLimit());
 		setRemainingCampaignLimit(computeRemainingMemberLimit());
@@ -283,11 +273,33 @@ public class CampaignDiscount {
 		this.validationMessage = validationMessage;
 	}
 	
+	public double getRsp() {
+		return rsp;
+	}
+
+	public void setRsp(double rsp) {
+		this.rsp = rsp;
+	}
+
 	/**
 	 * 
 	 * @return
 	 */
 	private double computeSP() {
+
+		JAbstractFactory discountComputeFactory = 
+				FactoryProducer.getFactory(JavelinConstants.DISCOUNT_COMPUTE);
+		IDiscountCompute discountCompute = 
+				discountComputeFactory.getDiscountCompute(getDiscountTier());
+		
+		return discountCompute.compute(getMrp(), getTargetPrice(), getDiscountType(), getDiscountValue());
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private double computeRSP() {
 
 		JAbstractFactory discountComputeFactory = 
 				FactoryProducer.getFactory(JavelinConstants.DISCOUNT_COMPUTE);
@@ -349,6 +361,32 @@ public class CampaignDiscount {
 		IDiscountCompute discountCompute = 
 				discountComputeFactory.getDiscountCompute(getDiscountTier());
 		
+		/**
+		 * 
+		 * SP will be computed on MRP if there are no discounts
+		 */
+		basePrice = basePrice == 0 ? getMrp() : basePrice;
+		
+		return discountCompute.compute(basePrice, getTargetPrice(), getDiscountType(), getDiscountValue());
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public double computeRSP(double basePrice) {
+
+		JAbstractFactory discountComputeFactory = 
+				FactoryProducer.getFactory(JavelinConstants.DISCOUNT_COMPUTE);
+		IDiscountCompute discountCompute = 
+				discountComputeFactory.getDiscountCompute(getDiscountTier());
+		
+		/**
+		 * 
+		 * SP will be computed on MRP if there are no discounts
+		 */
+		basePrice = basePrice == 0 ? getMrp() : basePrice;
+		
 		return discountCompute.compute(basePrice, getTargetPrice(), getDiscountType(), getDiscountValue());
 	}
 	
@@ -365,6 +403,24 @@ public class CampaignDiscount {
 		
 		return true;
 	}
+	
+	/**
+	 * 
+	 */
+	public void populate() {
+		
+		/**
+		 * compute intuitive values at the time of creation
+		 * this will be used for evaluation later
+		 * 
+		 */
+		setSp(computeSP());
+		setRsp(computeRSP());
+		setRedemption(computeRedemption());
+		setRemainingMemberLimit(computeRemainingCampaignLimit());
+		setRemainingCampaignLimit(computeRemainingMemberLimit());
+		setAvailableRedemptionQuantity(computeAvailableRedemptionQuantity());
+	}
 
 	@Override
 	public String toString() {
@@ -373,6 +429,7 @@ public class CampaignDiscount {
 	    buff.append("CampaignID=" + getCampaignId() + "\n");
 	    buff.append("MRP=" + getMrp() + "\n");
 	    buff.append("SP=" + getSp() + "\n");
+	    buff.append("RSP=" + getRsp() + "\n");
 	    buff.append("TargetPrice=" + getTargetPrice() + "\n");
 	    buff.append("DiscountType=" + getDiscountType() + "\n");
 	    buff.append("DiscountValue=" + getDiscountValue() + "\n");

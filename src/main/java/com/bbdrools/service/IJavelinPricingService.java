@@ -3,7 +3,10 @@
  */
 package com.bbdrools.service;
 
+import java.util.List;
+
 import com.bbdrools.model.CampaignDiscount;
+import com.bbdrools.model.JavelinPrice;
 
 /**
  * @author ayazpasha
@@ -11,6 +14,6 @@ import com.bbdrools.model.CampaignDiscount;
  */
 public interface IJavelinPricingService {
 	
-	public CampaignDiscount compute(CampaignDiscount campaignDiscount);
+	public JavelinPrice compute(List<CampaignDiscount> campaignDiscount);
 
 }

@@ -10,7 +10,7 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
-public class BBDroolsApplication extends Application<BBDroolsConfiguration>{
+public class BBDroolsApplication extends Application<BBDroolsConfiguration> {
 
 	public static void main(String[] args) throws Exception {
         new BBDroolsApplication().run(args);

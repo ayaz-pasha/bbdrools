@@ -3,6 +3,8 @@
  */
 package com.bbdrools.resources;
 
+import java.util.List;
+
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -10,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.bbdrools.model.CampaignDiscount;
+import com.bbdrools.model.JavelinPrice;
 import com.bbdrools.service.IJavelinPricingService;
 import com.bbdrools.service.impl.JavelinPricingServiceImpl;
 import com.codahale.metrics.annotation.Timed;
@@ -33,11 +36,11 @@ public class JavelinPricingResource {
 	@POST
     @Timed
     @Path("/")
-    public Response compute(CampaignDiscount campaignDiscount) {
+    public Response compute(List<CampaignDiscount> campaignDiscount) {
     	IJavelinPricingService service = 
 				new JavelinPricingServiceImpl();
 		
-    	CampaignDiscount response = 
+    	JavelinPrice response = 
     			service.compute(campaignDiscount);
 		
 		return Response.status(200).entity(response).build();
