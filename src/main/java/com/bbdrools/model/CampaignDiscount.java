@@ -7,11 +7,15 @@ import com.bbdrools.factory.FactoryProducer;
 import com.bbdrools.factory.JAbstractFactory;
 import com.bbdrools.service.IDiscountCompute;
 import com.bbdrools.util.JavelinConstants;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author ayazpasha
  *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CampaignDiscount {
 	
 	private long campaignId;
@@ -22,6 +26,10 @@ public class CampaignDiscount {
 	private String discountType;
 	private double discountValue;
 	private String discountTier;
+	private double savingAmount;
+	private double savingPercent;
+	private double redemptionSavingAmount;
+	private double redemptionSavingPercent;
 	private double vendorBreakup;
 	private double categoryBreakup;
 	private double marketingBreakup;
@@ -41,10 +49,11 @@ public class CampaignDiscount {
 	private boolean valid;
 	private String validationMessage;
 	
+	@JsonCreator
 	public CampaignDiscount() {}
 	
 	public CampaignDiscount(long campaignId, double mrp, double targetPrice,
-			String discountType, double discountValue, String discountTier,
+			String discountType, double discountValue, String discountTier, double vendorBreakup,
 			int redemptionCampaignLimit, int redemptionMemberLimit, int redemptionOrderLimit,
 			int liveCampaignRedemptionCount, int liveMemberRedemptionCount) {
 		
@@ -54,6 +63,7 @@ public class CampaignDiscount {
 		setDiscountType(discountType);
 		setDiscountValue(discountValue);
 		setDiscountTier(discountTier);
+		setVendorBreakup(vendorBreakup);
 		setRedemptionCampaignLimit(redemptionCampaignLimit);
 		setRedemptionMemberLimit(redemptionMemberLimit);
 		setRedemptionOrderLimit(redemptionOrderLimit);
@@ -67,12 +77,15 @@ public class CampaignDiscount {
 		 */
 		setSp(computeSP());
 		setRsp(computeRSP());
+		setSavingAmount(computeSavingAmount());
+		setSavingPercent(computeSavingPercent());
 		setRedemption(computeRedemption());
 		setRemainingMemberLimit(computeRemainingCampaignLimit());
 		setRemainingCampaignLimit(computeRemainingMemberLimit());
 		setAvailableRedemptionQuantity(computeAvailableRedemptionQuantity());
 	}
 
+	@JsonProperty("campaign_id")
 	public long getCampaignId() {
 		return campaignId;
 	}
@@ -81,6 +94,7 @@ public class CampaignDiscount {
 		this.campaignId = campaignId;
 	}
 
+	@JsonProperty("mrp")
 	public double getMrp() {
 		return mrp;
 	}
@@ -97,6 +111,7 @@ public class CampaignDiscount {
 		this.sp = sp;
 	}
 	
+	@JsonProperty("target_price")
 	public double getTargetPrice() {
 		return targetPrice;
 	}
@@ -105,6 +120,7 @@ public class CampaignDiscount {
 		this.targetPrice = targetPrice;
 	}
 
+	@JsonProperty("discount_type")
 	public String getDiscountType() {
 		return discountType;
 	}
@@ -113,6 +129,7 @@ public class CampaignDiscount {
 		this.discountType = discountType;
 	}
 
+	@JsonProperty("discount_value")
 	public double getDiscountValue() {
 		return discountValue;
 	}
@@ -121,6 +138,7 @@ public class CampaignDiscount {
 		this.discountValue = discountValue;
 	}
 
+	@JsonProperty("discount_category")
 	public String getDiscountTier() {
 		return discountTier;
 	}
@@ -128,7 +146,40 @@ public class CampaignDiscount {
 	public void setDiscountTier(String discountTier) {
 		this.discountTier = discountTier;
 	}
+	
+	public double getSavingAmount() {
+		return savingAmount;
+	}
 
+	public void setSavingAmount(double savingAmount) {
+		this.savingAmount = savingAmount;
+	}
+
+	public double getSavingPercent() {
+		return savingPercent;
+	}
+
+	public void setSavingPercent(double savingPercent) {
+		this.savingPercent = savingPercent;
+	}
+
+	public double getRedemptionSavingAmount() {
+		return redemptionSavingAmount;
+	}
+
+	public void setRedemptionSavingAmount(double redemptionSavingAmount) {
+		this.redemptionSavingAmount = redemptionSavingAmount;
+	}
+
+	public double getRedemptionSavingPercent() {
+		return redemptionSavingPercent;
+	}
+
+	public void setRedemptionSavingPercent(double redemptionSavingPercent) {
+		this.redemptionSavingPercent = redemptionSavingPercent;
+	}
+
+	@JsonProperty("vendor_funding")
 	public double getVendorBreakup() {
 		return vendorBreakup;
 	}
@@ -137,6 +188,7 @@ public class CampaignDiscount {
 		this.vendorBreakup = vendorBreakup;
 	}
 
+	@JsonProperty("category_funding")
 	public double getCategoryBreakup() {
 		return categoryBreakup;
 	}
@@ -145,6 +197,7 @@ public class CampaignDiscount {
 		this.categoryBreakup = categoryBreakup;
 	}
 
+	@JsonProperty("marketing_funding")
 	public double getMarketingBreakup() {
 		return marketingBreakup;
 	}
@@ -153,6 +206,7 @@ public class CampaignDiscount {
 		this.marketingBreakup = marketingBreakup;
 	}
 
+	@JsonProperty("campaign_redemption")
 	public long getRedemptionCampaignLimit() {
 		return redemptionCampaignLimit;
 	}
@@ -161,6 +215,7 @@ public class CampaignDiscount {
 		this.redemptionCampaignLimit = redemptionCampaignLimit;
 	}
 
+	@JsonProperty("member_redemption")
 	public long getRedemptionMemberLimit() {
 		return redemptionMemberLimit;
 	}
@@ -169,6 +224,7 @@ public class CampaignDiscount {
 		this.redemptionMemberLimit = redemptionMemberLimit;
 	}
 
+	@JsonProperty("order_redemption")
 	public long getRedemptionOrderLimit() {
 		return redemptionOrderLimit;
 	}
@@ -177,6 +233,7 @@ public class CampaignDiscount {
 		this.redemptionOrderLimit = redemptionOrderLimit;
 	}
 
+	@JsonProperty("live_campaign_redemption")
 	public long getLiveCampaignRedemptionCount() {
 		return liveCampaignRedemptionCount;
 	}
@@ -185,6 +242,7 @@ public class CampaignDiscount {
 		this.liveCampaignRedemptionCount = liveCampaignRedemptionCount;
 	}
 
+	@JsonProperty("live_member_redemption")
 	public long getLiveMemberRedemptionCount() {
 		return liveMemberRedemptionCount;
 	}
@@ -313,6 +371,42 @@ public class CampaignDiscount {
 	 * 
 	 * @return
 	 */
+	public double computeSavingPercent() {
+
+		return (getSavingAmount() * 100) / getMrp();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public double computeSavingAmount() {
+
+		return (getMrp() - getSp());
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public double computeRedemptionSavingPercent() {
+
+		return (getRedemptionSavingAmount() * 100) / getMrp();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public double computeRedemptionSavingAmount() {
+
+		return (getMrp() - getRsp());
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	private long computeAvailableRedemptionQuantity() {
 		
 		if(!hasRedemption()) return JavelinConstants.UNLIMITED_REDEMPTION; 
@@ -416,12 +510,15 @@ public class CampaignDiscount {
 		 */
 		setSp(computeSP());
 		setRsp(computeRSP());
+		setSavingAmount(computeSavingAmount());
+		setSavingPercent(computeSavingPercent());
 		setRedemption(computeRedemption());
 		setRemainingMemberLimit(computeRemainingCampaignLimit());
 		setRemainingCampaignLimit(computeRemainingMemberLimit());
 		setAvailableRedemptionQuantity(computeAvailableRedemptionQuantity());
 	}
 
+	/*
 	@Override
 	public String toString() {
 	    StringBuffer buff = new StringBuffer();
@@ -434,6 +531,10 @@ public class CampaignDiscount {
 	    buff.append("DiscountType=" + getDiscountType() + "\n");
 	    buff.append("DiscountValue=" + getDiscountValue() + "\n");
 	    buff.append("DiscountTier=" + getDiscountTier() + "\n");
+	    buff.append("SavingAmount=" + getSavingAmount() + "\n");
+	    buff.append("SavingPercent=" + getSavingPercent() + "\n");
+	    buff.append("RedemptionSavingAmount=" + getRedemptionSavingAmount() + "\n");
+	    buff.append("RedemptionSavingPercent=" + getRedemptionSavingPercent() + "\n");
 	    buff.append("VendorBreakup=" + getVendorBreakup() + "\n");
 	    buff.append("MarketingBreakup=" + getMarketingBreakup() + "\n");
 	    buff.append("CategoryBreakup=" + getCategoryBreakup() + "\n");
@@ -450,5 +551,5 @@ public class CampaignDiscount {
 	    buff.append("-----CampaignDiscount end-)");
 	    return buff.toString();
 	}
-
+*/
 }

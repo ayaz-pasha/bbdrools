@@ -39,6 +39,8 @@ public class JavelinPricingServiceImpl implements IJavelinPricingService {
             kSession.setGlobal("javelinPrice", javelinPrice);
             kSession.setGlobal("redemptionLessCampaigns", new HashSet<Long>());
             kSession.setGlobal("campaigns", new HashSet<Long>());
+            kSession.setGlobal("redemptionLessComboCampaigns", new HashSet<Long>());
+            kSession.setGlobal("comboCampaigns", new HashSet<Long>());
             kSession.setGlobal("netAvailableRedemptionQuantity", 999999l);
             
             for(CampaignDiscount campaignDiscount : campaignDiscounts) {
@@ -53,8 +55,10 @@ public class JavelinPricingServiceImpl implements IJavelinPricingService {
             javelinPrice.setCampaigns((Set<Long>) kSession.getGlobal("campaigns"));
             javelinPrice.setRedemptionLessCampaigns((Set<Long>) kSession.getGlobal("redemptionLessCampaigns"));
             
+            javelinPrice.setComboCampaigns((Set<Long>) kSession.getGlobal("comboCampaigns"));
+            javelinPrice.setRedemptionLessComboCampaigns((Set<Long>) kSession.getGlobal("redemptionLessComboCampaigns"));
+            
             System.out.println("Best Discount final: "+ javelinPrice);
-			
             
             // destroy !
             
