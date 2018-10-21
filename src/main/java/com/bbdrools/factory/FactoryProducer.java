@@ -18,6 +18,9 @@ public class FactoryProducer {
 
 		} else if (choice.equalsIgnoreCase(JavelinConstants.DISCOUNT_TYPE)) {
 			return new DiscountTypeFactory();
+			
+		} else if (choice.equalsIgnoreCase(JavelinConstants.BREAKUP_COMPUTE)) {
+			return new BreakupComputeFactory();
 		}
 
 		return null;

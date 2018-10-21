@@ -5,6 +5,7 @@ package com.bbdrools.model;
 
 import com.bbdrools.factory.FactoryProducer;
 import com.bbdrools.factory.JAbstractFactory;
+import com.bbdrools.service.IBreakupCompute;
 import com.bbdrools.service.IDiscountCompute;
 import com.bbdrools.util.JavelinConstants;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -33,6 +34,8 @@ public class CampaignDiscount {
 	private double vendorBreakup;
 	private double categoryBreakup;
 	private double marketingBreakup;
+	private double vendorBreakupAmount;
+	private double redemptionVendorBreakupAmount;
 	private long redemptionCampaignLimit;
 	private long redemptionMemberLimit;
 	private long redemptionOrderLimit;
@@ -79,6 +82,7 @@ public class CampaignDiscount {
 		setRsp(computeRSP());
 		setSavingAmount(computeSavingAmount());
 		setSavingPercent(computeSavingPercent());
+		setVendorBreakupAmount(computeVendorBreakupAmount());
 		setRedemption(computeRedemption());
 		setRemainingMemberLimit(computeRemainingCampaignLimit());
 		setRemainingCampaignLimit(computeRemainingMemberLimit());
@@ -109,6 +113,8 @@ public class CampaignDiscount {
 
 	public void setSp(double sp) {
 		this.sp = sp;
+		
+		setValidity();
 	}
 	
 	@JsonProperty("target_price")
@@ -338,6 +344,22 @@ public class CampaignDiscount {
 	public void setRsp(double rsp) {
 		this.rsp = rsp;
 	}
+	
+	public double getVendorBreakupAmount() {
+		return vendorBreakupAmount;
+	}
+
+	public void setVendorBreakupAmount(double vendorBreakupAmount) {
+		this.vendorBreakupAmount = vendorBreakupAmount;
+	}
+	
+	public double getRedemptionVendorBreakupAmount() {
+		return redemptionVendorBreakupAmount;
+	}
+
+	public void setRedemptionVendorBreakupAmount(double redemptionVendorBreakupAmount) {
+		this.redemptionVendorBreakupAmount = redemptionVendorBreakupAmount;
+	}
 
 	/**
 	 * 
@@ -365,6 +387,34 @@ public class CampaignDiscount {
 				discountComputeFactory.getDiscountCompute(getDiscountTier());
 		
 		return discountCompute.compute(getMrp(), getTargetPrice(), getDiscountType(), getDiscountValue());
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public double computeVendorBreakupAmount() {
+
+		JAbstractFactory breakupComputeFactory = 
+				FactoryProducer.getFactory(JavelinConstants.BREAKUP_COMPUTE);
+		IBreakupCompute breakupCompute = 
+				breakupComputeFactory.getBreakupCompute(getDiscountType());
+		
+		return breakupCompute.compute(getVendorBreakup(), getSavingAmount());
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public double computeRedemptionVendorBreakupAmount() {
+
+		JAbstractFactory breakupComputeFactory = 
+				FactoryProducer.getFactory(JavelinConstants.BREAKUP_COMPUTE);
+		IBreakupCompute breakupCompute = 
+				breakupComputeFactory.getBreakupCompute(getDiscountType());
+		
+		return breakupCompute.compute(getVendorBreakup(), getSavingAmount());
 	}
 	
 	/**
@@ -483,7 +533,7 @@ public class CampaignDiscount {
 		
 		return discountCompute.compute(basePrice, getTargetPrice(), getDiscountType(), getDiscountValue());
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -499,7 +549,17 @@ public class CampaignDiscount {
 	}
 	
 	/**
-	 * 
+	 * set validity by checking SP
+	 */
+	private void setValidity() {
+
+		if(getSp() <= 0) { setValid(false); setValidationMessage("SP less than or equal to 0");}
+		else if(getSp() >= getMrp()) { setValid(false); setValidationMessage("SP greater or equal to MRP");}
+		else setValid(true);
+	}
+	
+	/**
+	 * populate initial values 
 	 */
 	public void populate() {
 		
@@ -512,6 +572,7 @@ public class CampaignDiscount {
 		setRsp(computeRSP());
 		setSavingAmount(computeSavingAmount());
 		setSavingPercent(computeSavingPercent());
+		setVendorBreakupAmount(computeVendorBreakupAmount());
 		setRedemption(computeRedemption());
 		setRemainingMemberLimit(computeRemainingCampaignLimit());
 		setRemainingCampaignLimit(computeRemainingMemberLimit());

@@ -9,18 +9,18 @@ package com.bbdrools.model;
  */
 public class BestVendorFundingRedemptionLessCampaign {
 	
-	private BestDiscountRedemptionLessCampaign campaignDiscount;
+	private CampaignDiscount campaignDiscount;
 	
 	public BestVendorFundingRedemptionLessCampaign(BestDiscountRedemptionLessCampaign campaignDiscount) {
 
-		setCampaignDiscount(campaignDiscount);
+		setCampaignDiscount(campaignDiscount.getCampaignDiscount());
 	}
 
-	public BestDiscountRedemptionLessCampaign getCampaignDiscount() {
+	public CampaignDiscount getCampaignDiscount() {
 		return campaignDiscount;
 	}
 
-	public void setCampaignDiscount(BestDiscountRedemptionLessCampaign campaignDiscount) {
+	public void setCampaignDiscount(CampaignDiscount campaignDiscount) {
 		this.campaignDiscount = campaignDiscount;
 	}
 	

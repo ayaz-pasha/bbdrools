@@ -3,6 +3,7 @@
  */
 package com.bbdrools.factory;
 
+import com.bbdrools.service.IBreakupCompute;
 import com.bbdrools.service.IDiscountCompute;
 import com.bbdrools.service.IDiscountType;
 import com.bbdrools.service.impl.FixedDiscount;
@@ -41,6 +42,12 @@ public class DiscountTypeFactory extends JAbstractFactory {
 	@Override
 	public IDiscountCompute getDiscountCompute(String discountTier) {
 
+		return null;
+	}
+
+	@Override
+	public IBreakupCompute getBreakupCompute(String discountType) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

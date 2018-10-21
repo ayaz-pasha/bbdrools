@@ -67,7 +67,7 @@ public class BestSPTest {
 		
 		
 		try {
-            
+           
             // go !
 			
 			JavelinPrice javelinPrice = new JavelinPrice();
@@ -78,7 +78,7 @@ public class BestSPTest {
 			sessionStateful.setGlobal("comboCampaigns", new HashSet<Long>());
 			sessionStateful.setGlobal("netAvailableRedemptionQuantity", 9999999l);
 			
-			CampaignDiscount discount1 = new CampaignDiscount(1l, 100.0, 0.0, JavelinConstants.FLAT, 10, JavelinConstants.REGULAR, 5, 9999999, 10, 2, 990, 10);
+			/*CampaignDiscount discount1 = new CampaignDiscount(1l, 100.0, 0.0, JavelinConstants.FLAT, 10, JavelinConstants.REGULAR, 5, 9999999, 10, 2, 990, 10);
 			CampaignDiscount discount2 = new CampaignDiscount(2l, 100.0, 50.0, JavelinConstants.FIXED, 0, JavelinConstants.REGULAR, 2, 1000, 10, 2, 990, 10);//
 			CampaignDiscount discount3 = new CampaignDiscount(3l, 100.0, 0.0, JavelinConstants.FLAT, 12, JavelinConstants.REGULAR, 3, 9999999, 10, 2, 1001, 10);
 			CampaignDiscount discount4 = new CampaignDiscount(4l, 100.0, 0.0, JavelinConstants.PERCENT, 20, JavelinConstants.REGULAR, 4, 1000, 10, 2, 990, 5);
@@ -92,7 +92,22 @@ public class BestSPTest {
 			
 			CampaignDiscount discount10 = new CampaignDiscount(10l, 100.0, 0.0, JavelinConstants.PERCENT, 15, JavelinConstants.COMBO, 1, 10000, 10, 2, 990, 5);
 			CampaignDiscount discount11 = new CampaignDiscount(11l, 100.0, 0.0, JavelinConstants.FLAT, 5, JavelinConstants.COMBO, 2, 9999999, 10, 2, 990, 5);
-		
+	*/
+			CampaignDiscount discount1 = new CampaignDiscount(1l, 100.0, 30.0, JavelinConstants.FIXED, 0, JavelinConstants.DIFFERENTIAL, 5, 1000, 10, 2, 1000, 1);
+			CampaignDiscount discount2 = new CampaignDiscount(2l, 100.0, 50.0, JavelinConstants.FIXED, 0, JavelinConstants.REGULAR, 2, 1000, 10, 2, 990, 10);//
+			CampaignDiscount discount3 = new CampaignDiscount(3l, 100.0, 101.0, JavelinConstants.FIXED, 12, JavelinConstants.DIFFERENTIAL, 3, 9999999, 10, 2, 1001, 10);
+			CampaignDiscount discount4 = new CampaignDiscount(4l, 100.0, 50.0, JavelinConstants.FIXED, 20, JavelinConstants.DIFFERENTIAL, 4, 9999999, 10, 2, 6, 4);//*
+			
+			CampaignDiscount discount5 = new CampaignDiscount(5l, 100.0, 40.0, JavelinConstants.FIXED, 80, JavelinConstants.DIFFERENTIAL, 1, 9999, 10, 2, 5, 1);//*
+			//CampaignDiscount discount9 = new CampaignDiscount(9l, 100.0, 45.0, JavelinConstants.FIXED, 0, JavelinConstants.DIFFERENTIAL, 2, 1000, 10, 2, 990, 5);
+			
+			CampaignDiscount discount6 = new CampaignDiscount(6l, 100.0, 0.0, JavelinConstants.FLAT, 80, JavelinConstants.REGULAR, 1, 9999, 10, 2, 990, 2);//*
+			CampaignDiscount discount7 = new CampaignDiscount(7l, 100.0, 0.0, JavelinConstants.PERCENT, 60, JavelinConstants.ADDON, 2, 1000, 10, 2, 999, 6);
+			CampaignDiscount discount8 = new CampaignDiscount(8l, 100.0, 0.0, JavelinConstants.FLAT, 40, JavelinConstants.ADDON, 3, 1000, 10, 2, 996, 4);
+			
+			CampaignDiscount discount9 = new CampaignDiscount(9l, 100.0, 0.0, JavelinConstants.FLAT, 35, JavelinConstants.ADDON, 1, 1000, 10, 2, 996, 4);
+			CampaignDiscount discount10 = new CampaignDiscount(10l, 100.0, 0.0, JavelinConstants.FLAT, 15, JavelinConstants.ADDON, 2, 9999999, 10, 2, 990, 5);
+	
 			sessionStateful.insert(discount1);
 			sessionStateful.insert(discount2);
 			sessionStateful.insert(discount3);
@@ -103,7 +118,7 @@ public class BestSPTest {
 			sessionStateful.insert(discount8);
 			sessionStateful.insert(discount9);
 			sessionStateful.insert(discount10);
-			sessionStateful.insert(discount11);
+			//sessionStateful.insert(discount11);
 
             sessionStateful.fireAllRules();
             

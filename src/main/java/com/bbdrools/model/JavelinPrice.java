@@ -22,6 +22,8 @@ public class JavelinPrice {
 	private Set<Long> redemptionLessCampaigns = new HashSet<Long>();
 	private Set<Long> redemptionLessComboCampaigns = new HashSet<Long>();
 	
+	public JavelinPrice() { setNarq(9999999l); }
+	
 	public double getSp() {
 		return sp;
 	}

@@ -30,5 +30,9 @@ public class JavelinConstants {
 	public static final String DIFFERENTIAL = "DIFFERENTIAL";
 	public static final String REGULAR = "REGULAR";
 	public static final long UNLIMITED_REDEMPTION = 9999999;
-
+	
+	/**
+	 * 
+	 */
+	public static final String BREAKUP_COMPUTE = "BREAKUP_COMPUTE";
 }

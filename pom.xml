@@ -12,13 +12,14 @@
   <properties>
     <dropwizard.version>0.9.2</dropwizard.version>
     <runtime.version>7.8.0.Final</runtime.version>
+    <jacoco.version>0.8.2</jacoco.version>
   </properties>
   
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.11</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -26,6 +27,12 @@
         <artifactId>dropwizard-core</artifactId>
         <version>${dropwizard.version}</version>
     </dependency>
+    <dependency>
+	    <groupId>io.dropwizard</groupId>
+	    <artifactId>dropwizard-testing</artifactId>
+	    <version>${dropwizard.version}</version>
+	    <scope>test</scope>
+	</dependency>
     <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-api</artifactId>
@@ -61,6 +68,45 @@
 		            </manifest>
 		        </archive>
 		    </configuration>
+		</plugin>
+		<plugin>
+			<groupId>org.jacoco</groupId>
+			<artifactId>jacoco-maven-plugin</artifactId>
+			<version>${jacoco.version}</version>
+			<executions>
+				<execution>
+					<id>prepare-agent</id>
+					<goals>
+						<goal>prepare-agent</goal>
+					</goals>
+				</execution>
+				<execution>
+					<id>report</id>
+					<phase>prepare-package</phase>
+					<goals>
+						<goal>report</goal>
+					</goals>
+				</execution>
+				<execution>
+					<id>post-unit-test</id>
+					<phase>test</phase>
+					<goals>
+						<goal>report</goal>
+					</goals>
+					<configuration>
+						<!-- Sets the path to the file which contains the execution data. -->
+
+						<dataFile>target/jacoco.exec</dataFile>
+						<!-- Sets the output directory for the code coverage report. -->
+						<outputDirectory>target/jacoco-ut</outputDirectory>
+					</configuration>
+				</execution>
+			</executions>
+			<configuration>
+				<systemPropertyVariables>
+					<jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+				</systemPropertyVariables>
+			</configuration>
 		</plugin>
   		<plugin>
 		    <groupId>org.apache.maven.plugins</groupId>

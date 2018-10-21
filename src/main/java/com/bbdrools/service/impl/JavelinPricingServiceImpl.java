@@ -28,13 +28,13 @@ public class JavelinPricingServiceImpl implements IJavelinPricingService {
 		
 		JavelinPrice javelinPrice = new JavelinPrice();
 		
+		KieContainer kContainer = KnowledgeSessionHelper.createRuleBase();
+        KieSession kSession = KnowledgeSessionHelper.
+        		getStatefulKnowledgeSessionWithCallback(kContainer, "pricing-ksession-rules");
+        
 		try {
 
-			KieContainer kContainer = KnowledgeSessionHelper.createRuleBase();
-            KieSession kSession = KnowledgeSessionHelper.
-            		getStatefulKnowledgeSessionWithCallback(kContainer, "pricing-ksession-rules");
-            
-            // go !
+			// go !
             
             kSession.setGlobal("javelinPrice", javelinPrice);
             kSession.setGlobal("redemptionLessCampaigns", new HashSet<Long>());
@@ -67,6 +67,11 @@ public class JavelinPricingServiceImpl implements IJavelinPricingService {
             
 		} catch (Throwable t) {
             t.printStackTrace();
+            
+            // destroy !
+            
+            kSession.dispose();
+            kSession.destroy();
         }
 		
 		return javelinPrice;
