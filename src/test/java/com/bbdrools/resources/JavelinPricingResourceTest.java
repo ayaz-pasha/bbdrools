@@ -26,7 +26,7 @@ public class JavelinPricingResourceTest {
     @Test
     public void idStartsAtOne() {
         Saying result = resource.sayHello(Optional.of("dropwizard"));
-        assertEquals(result.getId(), 1);
+        assertEquals(1, result.getId());
     }
 
     @Test

@@ -3,8 +3,6 @@
  */
 package com.bbdrools.service.impl;
 
-import java.util.List;
-
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
@@ -21,7 +19,7 @@ public class ProductDiscountServiceImpl implements IProductDiscountService {
 	/**
 	 * 
 	 */
-	public List<ProductDiscount> validate(List<ProductDiscount> productDiscounts) {
+	public ProductDiscount validate(ProductDiscount productDiscount) {
 
 		try {
 
@@ -31,19 +29,18 @@ public class ProductDiscountServiceImpl implements IProductDiscountService {
             
             // go !
             
-            for(ProductDiscount productDiscount : productDiscounts) {
-            	kSession.insert(productDiscount);
-            }
+        	kSession.insert(productDiscount);
             
             kSession.fireAllRules();
             kSession.dispose();
             kSession.destroy();
     		
-		} catch (Throwable t) {
-            t.printStackTrace();
+		} catch (Exception e) {
+            
+			e.printStackTrace();
         }
 		
-		return productDiscounts;
+		return productDiscount;
 	}
 
 }

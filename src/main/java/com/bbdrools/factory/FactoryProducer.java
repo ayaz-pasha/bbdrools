@@ -11,6 +11,12 @@ import com.bbdrools.util.JavelinConstants;
  */
 public class FactoryProducer {
 	
+	/**
+	 * private constructor 
+	 * 
+	 */
+	private FactoryProducer() {}
+	
 	public static JAbstractFactory getFactory(String choice) {
 
 		if (choice.equalsIgnoreCase(JavelinConstants.DISCOUNT_COMPUTE)) {

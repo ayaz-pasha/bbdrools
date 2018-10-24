@@ -9,7 +9,6 @@ import com.bbdrools.service.IDiscountType;
 import com.bbdrools.service.impl.AddonDiscountCompute;
 import com.bbdrools.service.impl.ComboDiscountCompute;
 import com.bbdrools.service.impl.DifferentialDiscountCompute;
-import com.bbdrools.service.impl.PercentDiscount;
 import com.bbdrools.service.impl.RegularDiscountCompute;
 import com.bbdrools.util.JavelinConstants;
 

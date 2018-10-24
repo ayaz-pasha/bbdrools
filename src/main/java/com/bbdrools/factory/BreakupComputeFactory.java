@@ -17,13 +17,13 @@ public class BreakupComputeFactory extends JAbstractFactory {
 
 	@Override
 	public IDiscountType getDiscountType(String discountType) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public IDiscountCompute getDiscountCompute(String discountTier) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 

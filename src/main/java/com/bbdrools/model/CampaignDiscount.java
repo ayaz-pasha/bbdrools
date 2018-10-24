@@ -42,10 +42,6 @@ public class CampaignDiscount {
 	private long liveCampaignRedemptionCount;
 	private long liveMemberRedemptionCount;
 	private long availableRedemptionQuantity;
-	/*private double bestSP;
-	private double redemptionSP;
-	private long bestSPQuantity;
-	private long redemptionSPQuantity;*/
 	private long remainingMemberLimit;
 	private long remainingCampaignLimit;
 	private boolean redemption;
@@ -264,38 +260,6 @@ public class CampaignDiscount {
 	public void setAvailableRedemptionQuantity(long availableRedemptionQuantity) {
 		this.availableRedemptionQuantity = availableRedemptionQuantity;
 	}
-
-	/*public double getBestSP() {
-		return bestSP;
-	}
-
-	public void setBestSP(double bestSP) {
-		this.bestSP = bestSP;
-	}
-
-	public double getRedemptionSP() {
-		return redemptionSP;
-	}
-
-	public void setRedemptionSP(double redemptionSP) {
-		this.redemptionSP = redemptionSP;
-	}
-
-	public long getBestSPQuantity() {
-		return bestSPQuantity;
-	}
-
-	public void setBestSPQuantity(long bestSPQuantity) {
-		this.bestSPQuantity = bestSPQuantity;
-	}
-
-	public long getRedemptionSPQuantity() {
-		return redemptionSPQuantity;
-	}
-
-	public void setRedemptionSPQuantity(long redemptionSPQuantity) {
-		this.redemptionSPQuantity = redemptionSPQuantity;
-	}*/
 	
 	public long getRemainingMemberLimit() {
 		return remainingMemberLimit;
@@ -462,10 +426,8 @@ public class CampaignDiscount {
 		if(!hasRedemption()) return JavelinConstants.UNLIMITED_REDEMPTION; 
 		else {
 		
-			long availableRedemptionQuantity = Math.min(getRedemptionOrderLimit(), 
+			return Math.min(getRedemptionOrderLimit(), 
 					Math.min(getRemainingMemberLimit(), getRemainingCampaignLimit()));
-			
-			return availableRedemptionQuantity;
 		}
 		
 	}
@@ -476,10 +438,10 @@ public class CampaignDiscount {
 	 */
 	private long computeRemainingMemberLimit() {
 		
-		long remainingMemberLimit = getRedemptionMemberLimit() - 
+		long remainMemberLimit = getRedemptionMemberLimit() - 
 				getLiveMemberRedemptionCount();
 		
-		return (remainingMemberLimit < 0) ? 0 : remainingMemberLimit;
+		return (remainMemberLimit < 0) ? 0 : remainMemberLimit;
 	}
 	
 	/**
@@ -488,10 +450,10 @@ public class CampaignDiscount {
 	 */
 	private long computeRemainingCampaignLimit() {
 		
-		long remainingCampaignLimit = getRedemptionCampaignLimit() - 
+		long remainCampaignLimit = getRedemptionCampaignLimit() - 
 				getLiveCampaignRedemptionCount();
 		
-		return (remainingCampaignLimit < 0) ? 0 : remainingCampaignLimit;
+		return (remainCampaignLimit < 0) ? 0 : remainCampaignLimit;
 	}
 	
 	/**
@@ -540,12 +502,7 @@ public class CampaignDiscount {
 	 */
 	private boolean computeRedemption() {
 
-		if(getRedemptionCampaignLimit() == JavelinConstants.UNLIMITED_REDEMPTION) {
-			
-			return false;
-		}
-		
-		return true;
+		return (getRedemptionCampaignLimit() == JavelinConstants.UNLIMITED_REDEMPTION);
 	}
 	
 	/**

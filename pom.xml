@@ -53,8 +53,27 @@
         <artifactId>drools-compiler</artifactId>
         <version>${runtime.version}</version>
     </dependency>
+    <dependency>
+		<groupId>org.sonarsource.scanner.maven</groupId>
+		<artifactId>sonar-maven-plugin</artifactId>
+		<version>3.2</version>
+	</dependency>
   </dependencies>
-  
+  <profiles>
+	<profile>
+		<id>sonar</id>
+		<activation>
+		<activeByDefault>true</activeByDefault>
+		</activation>
+	<properties>
+		<!-- Optional URL to server. Default value is http://localhost:9000 -->
+		<sonar.host.url>http://54.235.232.19</sonar.host.url>
+		<sonar.login>b7b2a6ab92c2115cda323556f89f9d7def0568ef</sonar.login>
+		<sonar.projectKey>BBDROOLS</sonar.projectKey>
+		<sonar.java.binaries></sonar.java.binaries>
+	</properties>
+	</profile>
+  </profiles>
   <build>
   	<plugins>
 	  	<plugin>

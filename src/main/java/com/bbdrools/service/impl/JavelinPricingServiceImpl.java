@@ -57,6 +57,7 @@ public class JavelinPricingServiceImpl implements IJavelinPricingService {
             
             javelinPrice.setComboCampaigns((Set<Long>) kSession.getGlobal("comboCampaigns"));
             javelinPrice.setRedemptionLessComboCampaigns((Set<Long>) kSession.getGlobal("redemptionLessComboCampaigns"));
+            javelinPrice.setDiscounts(campaignDiscounts);
             
             System.out.println("Best Discount final: "+ javelinPrice);
             
@@ -65,8 +66,8 @@ public class JavelinPricingServiceImpl implements IJavelinPricingService {
             kSession.dispose();
             kSession.destroy();
             
-		} catch (Throwable t) {
-            t.printStackTrace();
+		} catch (Exception e) {
+            e.printStackTrace();
             
             // destroy !
             

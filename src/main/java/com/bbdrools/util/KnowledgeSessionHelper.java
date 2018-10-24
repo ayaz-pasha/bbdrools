@@ -27,20 +27,22 @@ import org.kie.api.runtime.StatelessKieSession;
  */
 public class KnowledgeSessionHelper {
 	
+	/**
+	 * 
+	 */
+	private KnowledgeSessionHelper() {}
+	
 	public static KieContainer createRuleBase() {
 		KieServices ks = KieServices.Factory.get();
-		KieContainer kieContainer = ks.getKieClasspathContainer();
-		return kieContainer;
+		return ks.getKieClasspathContainer();
 	}
 	
 	public static StatelessKieSession getStatelessKnowledgeSession(KieContainer kieContainer, String sessionName) {
-		StatelessKieSession kSession = kieContainer.newStatelessKieSession(sessionName);
-		return kSession;
+		return kieContainer.newStatelessKieSession(sessionName);
 	}
 	
 	public static KieSession getStatefulKnowledgeSession(KieContainer kieContainer, String sessionName) {
-		KieSession kSession = kieContainer.newKieSession(sessionName);
-		return kSession;
+		return kieContainer.newKieSession(sessionName);
 	}
 	
 	public static KieSession getStatefulKnowledgeSessionWithCallback(
@@ -84,16 +86,40 @@ public class KnowledgeSessionHelper {
                         + " has been fired");
             }
             public void agendaGroupPopped(AgendaGroupPoppedEvent event) {
+            	
+            	/**
+            	 * Will be implemented if required
+            	 */
             }
             public void agendaGroupPushed(AgendaGroupPushedEvent event) {
+            	
+            	/**
+            	 * Will be implemented if required
+            	 */
             }
             public void beforeRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event) {
+            	
+            	/**
+            	 * Will be implemented if required
+            	 */
             }
             public void afterRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event) {
+            	
+            	/**
+            	 * Will be implemented if required
+            	 */
             }
             public void beforeRuleFlowGroupDeactivated(RuleFlowGroupDeactivatedEvent event) {
+            	
+            	/**
+            	 * Will be implemented if required
+            	 */
             }
             public void afterRuleFlowGroupDeactivated(RuleFlowGroupDeactivatedEvent event) {
+            	
+            	/**
+            	 * Will be implemented if required
+            	 */
             }
         });
         

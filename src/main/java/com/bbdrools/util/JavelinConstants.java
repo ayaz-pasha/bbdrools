@@ -8,6 +8,11 @@ package com.bbdrools.util;
  *
  */
 public class JavelinConstants {
+	
+	/**
+	 * 
+	 */
+	private JavelinConstants() {}
 
 	/**
 	 * 
@@ -35,4 +40,9 @@ public class JavelinConstants {
 	 * 
 	 */
 	public static final String BREAKUP_COMPUTE = "BREAKUP_COMPUTE";
+	public static final String RULE_ENGINE = "RULE ENGINE";
+	public static final String SUCCESS = "SUCCESS";
+	public static final String SUCCESS_MSG_PRICING = "pricing data returned successfully";
+	public static final String SUCCESS_MSG_VALIDATION = "validation data returned successfully";
+	
 }

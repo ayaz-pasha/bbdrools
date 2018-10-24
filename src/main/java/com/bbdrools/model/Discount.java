@@ -1,6 +1,6 @@
 package com.bbdrools.model;
 
-public class Discount {//implements Comparable<Discount> {
+public class Discount {
 	
 	private int id;
 	private double discountPrice;
@@ -67,13 +67,5 @@ public class Discount {//implements Comparable<Discount> {
 	    buff.append("-----Discount end-)");
 	    return buff.toString();
 	}
-	
-	/*public int compareTo(Discount another) {
-		if (this.getDiscountPrice() >= another.getDiscountPrice()) {
-            return -1;
-        } else {
-            return 1;
-        }
-	}*/
 
 }

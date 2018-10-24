@@ -3,7 +3,9 @@
  */
 package com.bbdrools.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,6 +23,7 @@ public class JavelinPrice {
 	private Set<Long> comboCampaigns = new HashSet<Long>();
 	private Set<Long> redemptionLessCampaigns = new HashSet<Long>();
 	private Set<Long> redemptionLessComboCampaigns = new HashSet<Long>();
+	private List<CampaignDiscount> discounts = new ArrayList<CampaignDiscount>();
 	
 	public JavelinPrice() { setNarq(9999999l); }
 	
@@ -94,6 +97,14 @@ public class JavelinPrice {
 
 	public void setRedemptionLessComboCampaigns(Set<Long> redemptionLessComboCampaigns) {
 		this.redemptionLessComboCampaigns = redemptionLessComboCampaigns;
+	}
+	
+	public List<CampaignDiscount> getDiscounts() {
+		return discounts;
+	}
+
+	public void setDiscounts(List<CampaignDiscount> discounts) {
+		this.discounts = discounts;
 	}
 
 	@Override

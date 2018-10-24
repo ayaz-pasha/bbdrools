@@ -3,7 +3,10 @@
  */
 package com.bbdrools.resources;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.validation.constraints.NotNull;
@@ -18,10 +21,12 @@ import javax.ws.rs.core.Response;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.bbdrools.api.Saying;
+import com.bbdrools.dto.PricingResponseDTO;
 import com.bbdrools.model.CampaignDiscount;
 import com.bbdrools.model.JavelinPrice;
 import com.bbdrools.service.IJavelinPricingService;
 import com.bbdrools.service.impl.JavelinPricingServiceImpl;
+import com.bbdrools.util.JavelinConstants;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 
@@ -38,7 +43,7 @@ import io.dropwizard.validation.Validated;
 public class JavelinPricingResource {
 
 	private final String template;
-	private final String defaultName = "RULE ENGINE";
+	private static final String defaultName = JavelinConstants.RULE_ENGINE;
 	private final AtomicLong counter;
 	
 	/**
@@ -63,6 +68,37 @@ public class JavelinPricingResource {
 		
 		return Response.status(200).entity(response).build();
     }
+	
+	@POST
+    @Timed
+    @Path("/price/new")
+    public Response computeNew(@NotNull @NotEmpty @Validated Map<String, 
+    		List<CampaignDiscount>> campaignDiscount) {
+    	
+		IJavelinPricingService service = 
+				new JavelinPricingServiceImpl();
+
+		Map<String, JavelinPrice> response = 
+				new HashMap<String, JavelinPrice>();
+		
+    	Iterator<String> it = 
+    			campaignDiscount.keySet().iterator();
+		
+		while(it.hasNext()) {
+			
+			String skuId = it.next();
+			response.put(skuId, 
+					service.compute(campaignDiscount.get(skuId)));
+		}
+		
+		PricingResponseDTO resp = new PricingResponseDTO();
+		resp.setStatus(JavelinConstants.SUCCESS);
+		resp.setStatusMsg(JavelinConstants.SUCCESS_MSG_PRICING);
+		resp.setData(response);
+		
+		return Response.status(200).entity(resp).build();
+    }
+
 	
     @GET
     @Timed

@@ -23,11 +23,11 @@ public class ProductDiscount {
 	private long redemptionOrderLimit;
 	private double minimumThresholdPrice;
 	private double thresholdMargin;
-	private boolean discountError;
-	private String errorMessage;
+	private boolean valid;
+	private String validationMessage;
 	
 	public ProductDiscount() {
-		setErrorMessage("");
+		setValidationMessage("");
 	}
 
 	public double getMrp() {
@@ -142,22 +142,22 @@ public class ProductDiscount {
 		this.thresholdMargin = thresholdMargin;
 	}
 
-	public boolean isDiscountError() {
-		return discountError;
+	public boolean isValid() {
+		return valid;
 	}
 
-	public void setDiscountError(boolean discountError) {
-		this.discountError = discountError;
+	public void setValid(boolean valid) {
+		this.valid = valid;
 	}
 
-	public String getErrorMessage() {
-		return errorMessage;
+	public String getValidationMessage() {
+		return validationMessage;
 	}
 
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
+	public void setValidationMessage(String validationMessage) {
+		this.validationMessage = validationMessage;
 	}
-	
+
 	@Override
 	public String toString() {
 	    StringBuffer buff = new StringBuffer();
