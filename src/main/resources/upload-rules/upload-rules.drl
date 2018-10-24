@@ -13,8 +13,8 @@ rule "Selling Price greater than MRP"
         $productDiscount: ProductDiscount(sp > mrp)
     then
         //actions
-		$productDiscount.setDiscountError(true);
-		$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Selling Price greater than MRP ~ ");
+		$productDiscount.setValid(true);
+		$productDiscount.setValidationMessage($productDiscount.getValidationMessage()+ "Selling Price greater than MRP ~ ");
 end
 
 rule "Selling Price less than zero"
@@ -24,8 +24,8 @@ rule "Selling Price less than zero"
         $productDiscount: ProductDiscount(sp < 0)
     then
         //actions
-		$productDiscount.setDiscountError(true);
-		$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Selling Price less than zero ~ ");
+		$productDiscount.setValid(true);
+		$productDiscount.setValidationMessage($productDiscount.getValidationMessage()+ "Selling Price less than zero ~ ");
 end
 
 //rule "Discounted Value provided by Marketing and Category is higher than the Threshold Margin set for the given SKU"
@@ -70,8 +70,8 @@ rule "Redemption Limit per Order should be less than or equal to the Redemption 
         $productDiscount: ProductDiscount(redemptionOrderLimit > redemptionMemberLimit)
     then
         //actions
-		$productDiscount.setDiscountError(true);
-		$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ "Redemption Limit per Order should be less than or equal to the Redemption Limit per Member ~ ");
+		$productDiscount.setValid(true);
+		$productDiscount.setValidationMessage($productDiscount.getValidationMessage()+ "Redemption Limit per Order should be less than or equal to the Redemption Limit per Member ~ ");
 end
 
 rule "Redemption Limit per Campaign should be greater than or equal to the Redemption Limit per Member and the Redemption Limit per Order"
@@ -81,6 +81,6 @@ rule "Redemption Limit per Campaign should be greater than or equal to the Redem
         $productDiscount: ProductDiscount(redemptionCampaignLimit < redemptionMemberLimit || redemptionCampaignLimit < redemptionOrderLimit)
     then
         //actions
-		$productDiscount.setDiscountError(true);
-		$productDiscount.setErrorMessage($productDiscount.getErrorMessage()+ " ~ Redemption Limit per Campaign should be greater than or equal to the Redemption Limit per Member and the Redemption Limit per Order ~ ");
+		$productDiscount.setValid(true);
+		$productDiscount.setValidationMessage($productDiscount.getValidationMessage()+ " ~ Redemption Limit per Campaign should be greater than or equal to the Redemption Limit per Member and the Redemption Limit per Order ~ ");
 end
