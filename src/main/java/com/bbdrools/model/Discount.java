@@ -1,5 +1,8 @@
 package com.bbdrools.model;
 
+import lombok.Data;
+
+@Data
 public class Discount {
 	
 	private int id;
@@ -16,56 +19,14 @@ public class Discount {
 		setCampaignId(campaignId);
 	}
 
-	public int getId() {
-		return id;
-	}
-	
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	public double getDiscountPrice() {
-		return discountPrice;
-	}
-	
-	public void setDiscountPrice(double discountPrice) {
-		this.discountPrice = discountPrice;
-	}
-	
-	public String getCategory() {
-		return category;
-	}
-	
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	public int getDiscountPercent() {
-		return discountPercent;
-	}
-
-	public void setDiscountPercent(int discountPercent) {
-		this.discountPercent = discountPercent;
-	}
-
-	public int getCampaignId() {
-		return campaignId;
-	}
-
-	public void setCampaignId(int campaignId) {
-		this.campaignId = campaignId;
-	}
-	
 	@Override
 	public String toString() {
-	    StringBuffer buff = new StringBuffer();
-	    buff.append("-----Discount-----)\n");
-	    buff.append("ID=" + getId() + "\n");
-	    buff.append("Category=" + getCategory() + "\n");
-	    buff.append("DiscountPrice=" + getDiscountPrice() + "\n");
-	    buff.append("CampaignID=" + getCampaignId() + "\n");
-	    buff.append("-----Discount end-)");
-	    return buff.toString();
+		
+		return "{\"campaign_id\": \""+getId()+"\","
+				+ "\"mrp\": \""+getCategory()+"\","
+				+ "\"sp\": \""+getDiscountPrice()+"\","
+				+ "\"rsp\": \""+getCampaignId()+"\""
+				+ "}";
 	}
 
 }

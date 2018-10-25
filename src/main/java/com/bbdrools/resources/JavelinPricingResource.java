@@ -31,6 +31,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 
 import io.dropwizard.validation.Validated;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * APIs for upload time validation
@@ -38,6 +39,7 @@ import io.dropwizard.validation.Validated;
  * @author ayazpasha
  *
  */
+@Slf4j
 @Path("/javelin/api")
 @Produces(MediaType.APPLICATION_JSON)
 public class JavelinPricingResource {
@@ -63,8 +65,12 @@ public class JavelinPricingResource {
     	IJavelinPricingService service = 
 				new JavelinPricingServiceImpl();
 		
+    	log.info("get price request - {}", campaignDiscount);
+    	
     	JavelinPrice response = 
     			service.compute(campaignDiscount);
+    	
+		log.info("get price response - {}", response);
 		
 		return Response.status(200).entity(response).build();
     }
@@ -74,6 +80,8 @@ public class JavelinPricingResource {
     @Path("/price/new")
     public Response computeNew(@NotNull @NotEmpty @Validated Map<String, 
     		List<CampaignDiscount>> campaignDiscount) {
+		
+		log.info("get price new request - {}", campaignDiscount);
     	
 		IJavelinPricingService service = 
 				new JavelinPricingServiceImpl();
@@ -95,6 +103,8 @@ public class JavelinPricingResource {
 		resp.setStatus(JavelinConstants.SUCCESS);
 		resp.setStatusMsg(JavelinConstants.SUCCESS_MSG_PRICING);
 		resp.setData(response);
+		
+		log.info("get price new response - {}", resp);
 		
 		return Response.status(200).entity(resp).build();
     }

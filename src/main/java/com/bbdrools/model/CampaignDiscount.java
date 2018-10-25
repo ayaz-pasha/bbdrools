@@ -12,10 +12,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Data;
+
 /**
  * @author ayazpasha
  *
  */
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CampaignDiscount {
 	
@@ -536,38 +539,37 @@ public class CampaignDiscount {
 		setAvailableRedemptionQuantity(computeAvailableRedemptionQuantity());
 	}
 
-	/*
+	
 	@Override
 	public String toString() {
-	    StringBuffer buff = new StringBuffer();
-	    buff.append("-----CampaignDiscount-----)\n");
-	    buff.append("CampaignID=" + getCampaignId() + "\n");
-	    buff.append("MRP=" + getMrp() + "\n");
-	    buff.append("SP=" + getSp() + "\n");
-	    buff.append("RSP=" + getRsp() + "\n");
-	    buff.append("TargetPrice=" + getTargetPrice() + "\n");
-	    buff.append("DiscountType=" + getDiscountType() + "\n");
-	    buff.append("DiscountValue=" + getDiscountValue() + "\n");
-	    buff.append("DiscountTier=" + getDiscountTier() + "\n");
-	    buff.append("SavingAmount=" + getSavingAmount() + "\n");
-	    buff.append("SavingPercent=" + getSavingPercent() + "\n");
-	    buff.append("RedemptionSavingAmount=" + getRedemptionSavingAmount() + "\n");
-	    buff.append("RedemptionSavingPercent=" + getRedemptionSavingPercent() + "\n");
-	    buff.append("VendorBreakup=" + getVendorBreakup() + "\n");
-	    buff.append("MarketingBreakup=" + getMarketingBreakup() + "\n");
-	    buff.append("CategoryBreakup=" + getCategoryBreakup() + "\n");
-	    buff.append("RedemptionOrderLimit=" + getRedemptionOrderLimit() + "\n");
-	    buff.append("RedemptionMemberLimit=" + getRedemptionMemberLimit() + "\n");
-	    buff.append("RedemptionCampaignLimit=" + getRedemptionCampaignLimit() + "\n");
-	    buff.append("AvailableRedemptionQuanity=" + getAvailableRedemptionQuantity() + "\n");
-	    buff.append("LiveCampaignRedemptionCount=" + getLiveCampaignRedemptionCount() + "\n");
-	    buff.append("LiveMemberRedemptionCount=" + getLiveMemberRedemptionCount() + "\n");
-	    buff.append("RemainingCampaignLimit=" + getRemainingCampaignLimit() + "\n");
-	    buff.append("RemainingMemberLimit=" + getRemainingMemberLimit() + "\n");
-	    buff.append("Valid=" + isValid() + "\n");
-	    buff.append("ValidationMessage=" + getValidationMessage() + "\n");
-	    buff.append("-----CampaignDiscount end-)");
-	    return buff.toString();
+	    
+		return "{\"campaign_id\": \""+getCampaignId()+"\","
+				+ "\"mrp\": \""+getMrp()+"\","
+				+ "\"sp\": \""+getSp()+"\","
+				+ "\"rsp\": \""+getRsp()+"\","
+				+ "\"target_price\": \""+getTargetPrice()+"\","
+				+ "\"discount_type\": \""+getDiscountType()+"\","
+				+ "\"discount_value\": \""+getDiscountValue()+"\","
+				+ "\"discount_tier\": \""+getDiscountTier()+"\","
+				+ "\"saving_amount\": \""+getSavingAmount()+"\","
+				+ "\"saving_percent\": \""+getSavingPercent()+"\","
+				+ "\"redemption_saving_amount\": \""+getRedemptionSavingAmount()+"\","
+				+ "\"redemption_saving_percent\": \""+getRedemptionSavingPercent()+"\","
+				+ "\"vendor_breakup\": \""+getVendorBreakup()+"\","
+				+ "\"marketing_breakup\": \""+getMarketingBreakup()+"\","
+				+ "\"category_breakup\": \""+getCategoryBreakup()+"\","
+				+ "\"redemption_order_limit\": \""+getRedemptionOrderLimit()+"\","
+				+ "\"redemption_member_limit\": \""+getRedemptionMemberLimit()+"\","
+				+ "\"redemption_campaign_limit\": \""+getRedemptionCampaignLimit()+"\","
+				+ "\"available_redemption_quantity\": \""+getAvailableRedemptionQuantity()+"\","
+				+ "\"live_campaign_redemption_count\": \""+getLiveCampaignRedemptionCount()+"\","
+				+ "\"live_member_redemption_count\": \""+getLiveMemberRedemptionCount()+"\","
+				+ "\"remaining_campaign_limit\": \""+getRemainingCampaignLimit()+"\","
+				+ "\"remaining_member_limit\": \""+getRemainingMemberLimit()+"\","
+				+ "\"valid\": \""+isValid()+"\","
+				+ "\"validation_message\": \""+getValidationMessage()+"\""
+				+ "}";
+		
 	}
-*/
+
 }

@@ -5,3 +5,14 @@ server:
 
 template: Hello, %s!
 defaultName: Stranger
+
+logging:
+  level: ALL
+  loggers:
+    com.bigbasket: INFO
+  appenders:
+    - type: console
+      threshold: ALL
+      timeZone: Asia/Calcutta
+      logFormat: "%d [%thread] %-5level %c{15} - [%X{X-Transaction-Key} - %X{X-Request-Key}] - %msg%n%rEx"
+  

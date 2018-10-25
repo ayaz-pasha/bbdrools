@@ -21,10 +21,13 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.StatelessKieSession;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author ayazpasha
  *
  */
+@Slf4j
 public class KnowledgeSessionHelper {
 	
 	/**
@@ -51,37 +54,37 @@ public class KnowledgeSessionHelper {
         KieSession session = getStatefulKnowledgeSession(kieContainer, sessionName);
         session.addEventListener(new RuleRuntimeEventListener() {
             public void objectInserted(ObjectInsertedEvent event) {
-                System.out.println("Object inserted \n"
+                log.debug("Object inserted \n"
                         + event.getObject().toString());
             }
             public void objectUpdated(ObjectUpdatedEvent event) {
-                System.out.println("Object was updated \n"
+            	log.debug("Object was updated \n"
                         + "new Content \n" + event.getObject().toString());
             }
             public void objectDeleted(ObjectDeletedEvent event) {
-                System.out.println("Object retracted \n"
+            	log.debug("Object retracted \n"
                         + event.getOldObject().toString());
             }
         });
         
         session.addEventListener(new AgendaEventListener() {
             public void matchCreated(MatchCreatedEvent event) {
-                System.out.println("The rule "
+            	log.debug("The rule "
                         + event.getMatch().getRule().getName()
                         + " can be fired in agenda");
             }
             public void matchCancelled(MatchCancelledEvent event) {
-                System.out.println("The rule "
+            	log.debug("The rule "
                         + event.getMatch().getRule().getName()
                         + " cannot be in agenda");
             }
             public void beforeMatchFired(BeforeMatchFiredEvent event) {
-                System.out.println("The rule "
+            	log.debug("The rule "
                         + event.getMatch().getRule().getName()
                         + " will be fired");
             }
             public void afterMatchFired(AfterMatchFiredEvent event) {
-                System.out.println("The rule "
+            	log.debug("The rule "
                         + event.getMatch().getRule().getName()
                         + " has been fired");
             }

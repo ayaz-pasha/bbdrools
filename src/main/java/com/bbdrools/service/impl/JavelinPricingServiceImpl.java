@@ -15,10 +15,13 @@ import com.bbdrools.model.JavelinPrice;
 import com.bbdrools.service.IJavelinPricingService;
 import com.bbdrools.util.KnowledgeSessionHelper;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author ayazpasha
  *
  */
+@Slf4j
 public class JavelinPricingServiceImpl implements IJavelinPricingService {
 
 	/**
@@ -59,7 +62,7 @@ public class JavelinPricingServiceImpl implements IJavelinPricingService {
             javelinPrice.setRedemptionLessComboCampaigns((Set<Long>) kSession.getGlobal("redemptionLessComboCampaigns"));
             javelinPrice.setDiscounts(campaignDiscounts);
             
-            System.out.println("Best Discount final: "+ javelinPrice);
+            log.info("best discount - "+ javelinPrice);
             
             // destroy !
             
@@ -67,7 +70,7 @@ public class JavelinPricingServiceImpl implements IJavelinPricingService {
             kSession.destroy();
             
 		} catch (Exception e) {
-            e.printStackTrace();
+            log.error("error while running rules - {}", e.getMessage());
             
             // destroy !
             

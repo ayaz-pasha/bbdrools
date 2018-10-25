@@ -21,12 +21,15 @@ import com.bbdrools.service.impl.ProductDiscountServiceImpl;
 import com.bbdrools.util.JavelinConstants;
 import com.codahale.metrics.annotation.Timed;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * APIs for upload time validation
  * 
  * @author ayazpasha
  *
  */
+@Slf4j
 @Path("/javelin/api/discount")
 @Produces(MediaType.APPLICATION_JSON)
 public class ProductDiscountResource {
@@ -41,6 +44,9 @@ public class ProductDiscountResource {
     @Timed
     @Path("/validation")
     public Response discountValidation(@Valid Map<String, ProductDiscount> productDiscounts) {
+		
+		log.info("post product discounts validation request - {}", productDiscounts);
+		
     	IProductDiscountService service = 
 				new ProductDiscountServiceImpl();
 		
@@ -61,6 +67,8 @@ public class ProductDiscountResource {
     	resp.setStatus(JavelinConstants.SUCCESS);
     	resp.setStatusMsg(JavelinConstants.SUCCESS_MSG_VALIDATION);
     	resp.setData(response);
+    	
+    	log.info("post product discounts validation response - {}", resp);
 		
 		return Response.status(200).entity(resp).build();
     }

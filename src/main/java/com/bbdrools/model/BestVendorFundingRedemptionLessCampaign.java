@@ -3,10 +3,13 @@
  */
 package com.bbdrools.model;
 
+import lombok.Data;
+
 /**
  * @author ayazpasha
  *
  */
+@Data
 public class BestVendorFundingRedemptionLessCampaign {
 	
 	private CampaignDiscount campaignDiscount;
@@ -16,12 +19,4 @@ public class BestVendorFundingRedemptionLessCampaign {
 		setCampaignDiscount(campaignDiscount.getCampaignDiscount());
 	}
 
-	public CampaignDiscount getCampaignDiscount() {
-		return campaignDiscount;
-	}
-
-	public void setCampaignDiscount(CampaignDiscount campaignDiscount) {
-		this.campaignDiscount = campaignDiscount;
-	}
-	
 }

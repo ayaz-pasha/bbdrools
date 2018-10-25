@@ -9,6 +9,9 @@ import com.bbdrools.dto.DiscountResponseDTO;
 import com.bbdrools.model.Discount;
 import com.bbdrools.service.IBBDroolsProductService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class BBDroolsProductServiceImpl implements IBBDroolsProductService {
 
 	public DiscountResponseDTO runRules(DiscountRequestDTO request) {
@@ -32,12 +35,13 @@ public class BBDroolsProductServiceImpl implements IBBDroolsProductService {
             kSession.insert(discountResponseDTO);
             
             kSession.fireAllRules();
+      
             kSession.dispose();
             kSession.destroy();
             
 		} catch (Exception e) {
 			
-            e.printStackTrace();
+            log.error("error while running rules - {}", e.getMessage());
         }
 		
 		return discountResponseDTO;
