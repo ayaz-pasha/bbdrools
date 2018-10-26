@@ -12,7 +12,7 @@ logging:
     com.bigbasket: INFO
   appenders:
     - type: console
-      threshold: ALL
+      threshold: INFO
       timeZone: Asia/Calcutta
       logFormat: "%d [%thread] %-5level %c{15} - [%X{X-Transaction-Key} - %X{X-Request-Key}] - %msg%n%rEx"
   

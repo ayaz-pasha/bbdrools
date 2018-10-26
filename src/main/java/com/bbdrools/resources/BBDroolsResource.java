@@ -12,7 +12,7 @@ import com.bbdrools.api.Saying;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 
-@Path("/hello-world")
+@Path("/health")
 @Produces(MediaType.APPLICATION_JSON)
 public class BBDroolsResource {
 

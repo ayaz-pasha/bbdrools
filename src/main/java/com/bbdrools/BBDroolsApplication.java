@@ -3,6 +3,7 @@ package com.bbdrools;
 import com.bbdrools.healthcheck.BBDroolsHealthCheck;
 import com.bbdrools.resources.BBDroolsProductResource;
 import com.bbdrools.resources.BBDroolsResource;
+import com.bbdrools.resources.JavelinHealthCheckResource;
 import com.bbdrools.resources.JavelinPricingResource;
 import com.bbdrools.resources.ProductDiscountResource;
 
@@ -43,11 +44,16 @@ public class BBDroolsApplication extends Application<BBDroolsConfiguration> {
 		final JavelinPricingResource javelinPricingResource = new JavelinPricingResource(
 				configuration.getTemplate());
 		
+		final JavelinHealthCheckResource healthCheckResource = new JavelinHealthCheckResource(
+				configuration.getTemplate(),
+				configuration.getDefaultName());
+		
 		final BBDroolsHealthCheck healthCheck =
 		        new BBDroolsHealthCheck(configuration.getTemplate());
 		    environment.healthChecks().register("template", healthCheck);
 		    
 		environment.jersey().register(resource);
+		environment.jersey().register(healthCheckResource);
 		environment.jersey().register(productResource);
 		environment.jersey().register(productDiscountResource);
 		environment.jersey().register(javelinPricingResource);
